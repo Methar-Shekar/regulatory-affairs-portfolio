@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>eCTD Explorer &mdash; AMLOZA ANDA | M. Shekar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<nav class="topnav" aria-label="Site navigation">
+  <div class="topnav-inner">
+    <a class="navlink back" href="index.html">&larr; Portfolio Home</a>
+    <a class="logo" href="index.html" style="padding-left:0;">M.<span class="dot">S</span></a>
+  </div>
+</nav>
+
+<div class="viewer-shell">
+  <aside class="tree-pane" id="treePane" aria-label="Document tree">
+    <div class="tree-pane-header">
+      <h2>eCTD Explorer</h2>
+      <p>Parsed live from <code>index.xml</code>. Click any file to preview it.</p>
+    </div>
+    <div id="treeList"><p class="error-msg" style="color:var(--ink-faint);font-style:italic;">Loading&hellip;</p></div>
+  </aside>
+
+  <main class="preview-pane">
+    <div class="preview-header" id="previewHeader" style="display:none;">
+      <span class="pmod-dot" id="previewDot"></span>
+      <h2 id="previewTitle"></h2>
+      <a class="dl" id="previewDownload" href="#" download>Download PDF</a>
+    </div>
+    <div class="preview-body" id="previewBody">
+      <div class="preview-empty">
+        <div class="big">Select a document</div>
+        <p>Choose any file from the tree on the left &mdash; Module 1 through Module 5 &mdash; to open it here.</p>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script src="viewer.js"></script>
+</body>
+</html>

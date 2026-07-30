@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  AMLOZA (Amlodipine Besylate Tablets, USP) 5 mg / 10 mg - ANDA
+  Sponsor: Blessaria Pharmaceuticals Inc. (fictional)
+  Prepared by: M. Shekar, Regulatory Affairs Associate (fictional role) |
+               M.Pharm Student, Pharmaceutical Regulatory Affairs, VIPER
+  eCTD Sequence: 0000 (Original Submission)
+  ACADEMIC PORTFOLIO EXERCISE - NOT A REAL SUBMISSION - NOT FOR REGULATORY USE
+  Simplified, illustrative backbone built to demonstrate understanding of eCTD structure.
+  Not validated against the official FDA/ICH DTDs (not redistributed here).
+  All content modules (1-5) are content-final as Word documents. PDF conversion to
+  Letter-size (8.5x11"), FDA-margin format is the next packaging step (not yet done).
+-->
+<ectd application-set="anda" application-number="[TO-BE-ASSIGNED]" sequence="0000">
+
+  <admin>
+    <applicant>Blessaria Pharmaceuticals Inc. (fictional sponsor)</applicant>
+    <product-name>AMLOZA (amlodipine besylate tablets, USP, 5 mg / 10 mg)</product-name>
+    <submission-type>Original ANDA</submission-type>
+    <submission-basis>Standard in vivo bioequivalence study (Module 5); BCS Class I biopharmaceutics discussion included as supplementary material only</submission-basis>
+    <submission-date>[MM/DD/YYYY]</submission-date>
+  </admin>
+
+  <m1-administrative-information-and-prescribing-information>
+
+    <m1-0-regional-toc status="final">
+      <leaf operation="new" id="m1-0-toc">
+        <title>1.0 Regional Administrative Information — Table of Contents</title>
+        <xref href="m1/us/1.0-regional-table-of-contents.pdf"/>
+      </leaf>
+    </m1-0-regional-toc>
+
+    <m1-1-forms status="placeholder-only">
+      <leaf operation="new" id="m1-1-1-356h">
+        <title>1.1.1 Form FDA 356h — Placeholder</title>
+        <xref href="m1/us/1.1-forms/1.1.1-fda-356h-placeholder.pdf"/>
+      </leaf>
+      <leaf operation="new" id="m1-1-2-3794">
+        <title>1.1.2 Form FDA 3794 — GDUFA Fee Cover Sheet Placeholder</title>
+        <xref href="m1/us/1.1-forms/1.1.2-fda-3794-gdufa-placeholder.pdf"/>
+      </leaf>
+      <leaf operation="new" id="m1-1-3-debarment">
+        <title>1.1.3 Debarment Certification</title>
+        <xref href="m1/us/1.1-forms/1.1.3-debarment-certification.pdf"/>
+      </leaf>
+      <leaf operation="new" id="m1-1-4-financial">
+        <title>1.1.4 Financial Disclosure — Placeholder</title>
+        <xref href="m1/us/1.1-forms/1.1.4-financial-disclosure-placeholder.pdf"/>
+      </leaf>
+      <leaf operation="new" id="m1-1-5-environmental">
+        <title>1.1.5 Environmental Analysis — Claim of Categorical Exclusion</title>
+        <xref href="m1/us/1.1-forms/1.1.5-environmental-categorical-exclusion.pdf"/>
+      </leaf>
+    </m1-1-forms>
+
+    <m1-2-cover-letter status="final">
+      <leaf operation="new" id="m1-2-cover-letter">
+        <title>Cover Letter</title>
+        <xref href="m1/us/1.2-cover-letter/cover-letter.pdf"/>
+      </leaf>
+    </m1-2-cover-letter>
+
+    <m1-3-administrative-information status="final">
+      <leaf operation="new" id="m1-3-admin">
+        <title>Administrative Information (contact/sponsor, debarment, financial disclosure, patent/exclusivity, waivers, field copy certification, user fee cover sheet — all as academic placeholders)</title>
+        <xref href="m1/us/1.3-administrative-information/administrative-information.pdf"/>
+      </leaf>
+    </m1-3-administrative-information>
+
+    <m1-11-labeling status="final">
+      <leaf operation="new" id="m1-11-pi">
+        <title>Full Prescribing Information (PLR format)</title>
+        <xref href="m1/us/1.11-labeling/full-prescribing-information.pdf"/>
+      </leaf>
+      <leaf operation="new" id="m1-11-carton">
+        <title>Container and Carton Labeling</title>
+        <xref href="m1/us/1.11-labeling/container-carton-labeling.pdf"/>
+      </leaf>
+    </m1-11-labeling>
+
+    <m1-14-basis-for-anda-submission status="supplementary-only">
+      <leaf operation="new" id="m1-14-biopharm-discussion" status="supplementary">
+        <title>Biopharmaceutics Classification — Supplementary Discussion (not the submission basis; submission basis is Module 5 in vivo BE data)</title>
+        <xref href="m1/us/1.14-basis-for-submission/biopharmaceutics-classification-discussion.pdf"/>
+      </leaf>
+    </m1-14-basis-for-anda-submission>
+
+  </m1-administrative-information-and-prescribing-information>
+
+  <m2-common-technical-document-summaries status="final">
+    <leaf operation="new" id="m2-3-qos">
+      <title>2.3 Quality Overall Summary</title>
+      <xref href="m2/quality-overall-summary.pdf"/>
+    </leaf>
+    <leaf operation="new" id="m2-4-2-7-overview">
+      <title>2.4 Nonclinical Overview / 2.7 Clinical Overview</title>
+      <xref href="m2/nonclinical-clinical-overview.pdf"/>
+    </leaf>
+  </m2-common-technical-document-summaries>
+
+  <m3-quality status="final">
+    <leaf operation="new" id="m3-2-s">
+      <title>3.2.S Drug Substance (Amlodipine Besylate)</title>
+      <xref href="m3/32-body-of-data/3.2.s-drug-substance.pdf"/>
+    </leaf>
+    <leaf operation="new" id="m3-2-p">
+      <title>3.2.P Drug Product (AMLOZA Tablets)</title>
+      <xref href="m3/32-body-of-data/3.2.p-drug-product.pdf"/>
+    </leaf>
+  </m3-quality>
+
+  <m4-nonclinical-study-reports status="final-waiver-basis">
+    <leaf operation="new" id="m4-1-toc">
+      <title>4.1 Table of Contents</title>
+      <xref href="m4/4.1-table-of-contents.pdf"/>
+    </leaf>
+    <leaf operation="new" id="m4-2-summary">
+      <title>4.2 Nonclinical Written and Tabulated Summaries</title>
+      <xref href="m4/4.2-nonclinical-written-summary.pdf"/>
+    </leaf>
+    <leaf operation="new" id="m4-3-reports">
+      <title>4.3 Nonclinical Study Reports (none submitted — waiver basis per 21 CFR 314.94(a)(8))</title>
+      <xref href="m4/4.3-nonclinical-study-reports.pdf"/>
+    </leaf>
+  </m4-nonclinical-study-reports>
+
+  <m5-clinical-study-reports status="final">
+    <leaf operation="new" id="m5-3-1-be-synopsis">
+      <title>5.3.1 Bioequivalence Study Report Synopsis (+ Comparative Dissolution Data) — all PK/dissolution results illustrative/hypothetical</title>
+      <xref href="m5/bioequivalence-study-synopsis.pdf"/>
+    </leaf>
+  </m5-clinical-study-reports>
+
+</ectd>
