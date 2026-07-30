@@ -55,25 +55,25 @@
 
     <m1-2-cover-letter status="final">
       <leaf operation="new" id="m1-2-cover-letter">
-        <title>Cover Letter</title>
+        <title>1.2 Cover Letter</title>
         <xref href="m1/us/1.2-cover-letter/cover-letter.pdf"/>
       </leaf>
     </m1-2-cover-letter>
 
     <m1-3-administrative-information status="final">
       <leaf operation="new" id="m1-3-admin">
-        <title>Administrative Information (contact/sponsor, debarment, financial disclosure, patent/exclusivity, waivers, field copy certification, user fee cover sheet — all as academic placeholders)</title>
+        <title>1.3 Administrative Information (contact/sponsor, debarment, financial disclosure, patent/exclusivity, waivers, field copy certification, user fee cover sheet — all as academic placeholders)</title>
         <xref href="m1/us/1.3-administrative-information/administrative-information.pdf"/>
       </leaf>
     </m1-3-administrative-information>
 
     <m1-11-labeling status="final">
       <leaf operation="new" id="m1-11-pi">
-        <title>Full Prescribing Information (PLR format)</title>
+        <title>1.11 Full Prescribing Information (PLR format)</title>
         <xref href="m1/us/1.11-labeling/full-prescribing-information.pdf"/>
       </leaf>
       <leaf operation="new" id="m1-11-carton">
-        <title>Container and Carton Labeling</title>
+        <title>1.11 Container and Carton Labeling</title>
         <xref href="m1/us/1.11-labeling/container-carton-labeling.pdf"/>
       </leaf>
     </m1-11-labeling>
