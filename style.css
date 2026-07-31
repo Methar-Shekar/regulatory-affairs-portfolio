@@ -74,13 +74,16 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--amber); outline
   z-index: 100;
 }
 .sidebar .avatar {
-  width: 130px; height: 130px;
+  width: 148px; height: 148px;
   border-radius: 50%;
   overflow: hidden;
-  border: 4px solid var(--sidebar-bg-alt);
+  border: 3px solid var(--sidebar-bg-alt);
+  outline: 2px solid var(--gold);
+  outline-offset: 4px;
   box-shadow: var(--shadow-md);
-  margin-bottom: 18px;
+  margin-bottom: 22px;
   flex: 0 0 auto;
+}
 }
 .sidebar .avatar img { width: 100%; height: 100%; object-fit: cover; }
 .sidebar .s-name {
