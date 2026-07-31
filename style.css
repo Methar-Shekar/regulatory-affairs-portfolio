@@ -322,3 +322,26 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--amber); outline
 .preview-empty .big { font-family: var(--display); font-size: 22px; color: var(--ink-soft); font-weight: 700; }
 .preview-empty p { max-width: 360px; font-size: 13.5px; margin: 0; }
 .error-msg { font-family: var(--mono); font-size: 13px; color: var(--stamp); padding: 20px; }
+/* ---------- Micro-interactions ---------- */
+.btn:active { transform: scale(0.97); }
+
+.port-card {
+  transition: box-shadow 0.2s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.cinfo-item, .r-item::before, .filter-btn {
+  transition: all 0.15s ease;
+}
+
+.msection {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.msection.in-view {
+  opacity: 1;
+  transform: translateY(0);
+}
+@media (prefers-reduced-motion: reduce) {
+  .msection { opacity: 1; transform: none; }
+}
