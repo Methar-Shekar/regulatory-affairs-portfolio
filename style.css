@@ -126,6 +126,23 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--amber); outline
 .s-social {
   display: flex;
   gap: 10px;
+}
+.s-social {
+  display: flex;
+  gap: 10px;
+  margin-top: 4px;
+  margin-bottom: 2px;
+}
+
+.s-copyright {
+  margin-top: auto;
+  padding-top: 8px;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--sidebar-text-soft);
+  text-align: center;
+}
+.s-social-bottom {
   margin-top: auto;
   padding-top: 8px;
 }
