@@ -1,24 +1,21 @@
-/* ---------- Typed tagline ---------- */
+/* ---------- Fading tagline ---------- */
 const TAGLINES = ['M.Pharm — Regulatory Affairs', 'eCTD & CTD Dossier Preparation', 'QMS Documentation | GMP Compliance', 'Open to Internships & RA Roles'];
-(function typeLoop() {
+(function fadeLoop() {
   const el = document.getElementById('typed');
   if (!el) return;
-  let ti = 0, ci = 0, deleting = false;
+  let ti = 0;
 
-  function tick() {
-    const full = TAGLINES[ti];
-    if (!deleting) {
-      ci++;
-      el.textContent = full.slice(0, ci);
-      if (ci === full.length) { deleting = true; setTimeout(tick, 1400); return; }
-    } else {
-      ci--;
-      el.textContent = full.slice(0, ci);
-      if (ci === 0) { deleting = false; ti = (ti + 1) % TAGLINES.length; }
-    }
-    setTimeout(tick, deleting ? 35 : 65);
+  function show() {
+    el.style.opacity = '0';
+    setTimeout(() => {
+      el.textContent = TAGLINES[ti];
+      el.style.opacity = '1';
+      ti = (ti + 1) % TAGLINES.length;
+    }, 400);
   }
-  tick();
+
+  show();
+  setInterval(show, 2800);
 })();
 /* ---------- Scroll reveal ---------- */
 (function scrollReveal() {
