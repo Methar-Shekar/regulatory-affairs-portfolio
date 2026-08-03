@@ -1,5 +1,5 @@
 /* ---------- Typed tagline ---------- */
-const TAGLINES = ['Regulatory Affairs Professional', 'eCTD & CTD Documentation', 'M.Pharm Student'];
+const TAGLINES = ['M.Pharm — Regulatory Affairs', 'eCTD & CTD Dossier Preparation', 'QMS Documentation | GMP Compliance', 'Open to Internships & RA Roles'];
 (function typeLoop() {
   const el = document.getElementById('typed');
   if (!el) return;
