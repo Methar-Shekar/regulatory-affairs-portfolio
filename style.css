@@ -62,16 +62,16 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--amber); outline
 /* ================= SIDEBAR ================= */
 .sidebar {
   position: fixed;
-  top: 0; left: 0; bottom: 0;
-  width: var(--sidebar-w);
+  top: 0; left: 0;
+  width: 280px;
+  height: 100vh;
   background: var(--sidebar-bg);
-  border-right: 1px solid var(--sidebar-border);
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 40px 26px 26px;
+  justify-content: center;
+  padding: 40px 24px;
   overflow-y: auto;
-  z-index: 100;
 }
 .sidebar .avatar {
   width: 148px; height: 148px;
@@ -82,14 +82,14 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--amber); outline
   margin-bottom: 22px;
   flex: 0 0 auto;
 }
-.sidebar .avatar img { width: 100%; height: 100%; object-fit: cover; }
-.sidebar .s-name {
-  font-family: var(--display);
-  font-size: 23px;
-  font-weight: 700;
-  text-align: center;
-  margin: 0 0 24px;
-  color: var(--sidebar-text);
+.sidebar .avatar {
+  width: 148px; height: 148px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 6px solid var(--sidebar-bg-alt);
+  box-shadow: inset 0 0 20px 6px rgba(10, 14, 28, 0.25), var(--shadow-md);
+  margin-bottom: 22px;
+  flex: 0 0 auto;
 }
 .sidebar .s-tagline {
   font-family: var(--mono);
@@ -103,21 +103,16 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--amber); outline
 @keyframes blink { 50% { opacity: 0; } }
 
 .sidebar nav.s-nav {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  margin-bottom: 24px;
+  border-top: 1px solid var(--sidebar-border);
+  padding-top: 20px;
+  margin-top: 6px;
+  ...
 }
 .sidebar nav.s-nav a {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 11px 14px;
-  border-radius: var(--r-sm);
-  font-size: 13.5px;
-  font-weight: 600;
-  color: var(--sidebar-text-soft);
+  color: #A9B1C7;
+}
+.sidebar nav.s-nav a:hover {
+  color: var(--sidebar-text);
 }
 .sidebar nav.s-nav a svg { width: 16px; height: 16px; flex: 0 0 auto; }
 .sidebar nav.s-nav a:hover { background: var(--sidebar-bg-alt); color: var(--sidebar-text); }
@@ -133,6 +128,7 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--amber); outline
   width: 34px; height: 34px;
   border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
+  background: var(--sidebar-bg-alt);
   border: 1px solid var(--sidebar-border);
   color: var(--sidebar-text);
   transition: all 0.15s ease;
@@ -141,8 +137,9 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--amber); outline
 .s-social a:hover { border-color: var(--gold); color: var(--gold); background: rgba(201, 164, 92, 0.08); }
 
 .s-copyright {
-  margin-top: auto;
-  padding-top: 8px;
+  position: absolute;
+  bottom: 24px;
+  left: 0; right: 0;
   font-family: var(--mono);
   font-size: 11px;
   color: var(--sidebar-text-soft);
