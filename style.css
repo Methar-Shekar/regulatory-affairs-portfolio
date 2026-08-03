@@ -92,14 +92,15 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--amber); outline
 }
 .sidebar .s-tagline {
   font-family: var(--mono);
-  font-size: 13px;
+  font-size: 11px;
+  letter-spacing: -0.01em;
   color: var(--gold);
   text-align: center;
   min-height: 20px;
+  white-space: nowrap;
+  overflow: hidden;
+  transition: opacity 0.4s ease;
 }
-.s-tagline-bottom { margin: 0 0 16px; }
-.s-tagline .cursor { display: inline-block; width: 2px; background: var(--gold); margin-left: 2px; animation: blink 0.9s step-end infinite; }
-@keyframes blink { 50% { opacity: 0; } }
 
 .sidebar nav.s-nav {
   display: flex;
