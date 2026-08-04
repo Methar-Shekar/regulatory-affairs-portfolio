@@ -263,7 +263,7 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--amber); outline
 }
 
 /* ---------- About ---------- */
-.about-lede { font-size: 20px; line-height: 1.65; color: var(--ink); max-width: 700px; margin-bottom: 22px; }
+.about-lede { font-size: 18px; line-height: 1.65; color: var(--ink); max-width: 700px; margin-bottom: 22px; }
 .about-lede:last-of-type { margin-bottom: 36px; }
 .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 30px; margin-bottom: 44px; }
 @media (max-width: 600px) { .info-grid { grid-template-columns: 1fr; } }
