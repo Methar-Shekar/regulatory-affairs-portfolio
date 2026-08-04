@@ -196,7 +196,7 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--amber); outline
 /* ---------- Hero ---------- */
 #home {
   display: flex; flex-direction: column; justify-content: center;
-  min-height: 92vh; padding-top: 0; position: relative; overflow: hidden;
+  min-height: 100vh; padding-top: 0; position: relative; overflow: hidden;
 }
 #home::before {
   content: ""; position: absolute; top: -120px; right: -160px;
