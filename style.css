@@ -219,6 +219,47 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--amber); outline
 .btn-primary:hover { background: var(--blue-deep); box-shadow: var(--shadow-hover); transform: translateY(-1px); }
 .btn-ghost { background: var(--card); color: var(--ink); border-color: var(--card-border); }
 .btn-ghost:hover { border-color: var(--blue); color: var(--blue-deep); transform: translateY(-1px); }
+.skills-title {
+  font-family: var(--display);
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0 0 24px;
+}
+
+.hero-highlights {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  margin-top: 56px;
+  flex-wrap: wrap;
+}
+.hh-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.hh-num {
+  font-family: var(--display);
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--blue-deep);
+}
+.hh-label {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--ink-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.hh-divider {
+  width: 1px;
+  height: 32px;
+  background: var(--card-border);
+}
+@media (max-width: 600px) {
+  .hero-highlights { gap: 20px; }
+  .hh-divider { display: none; }
+}
 
 /* ---------- About ---------- */
 .about-lede { font-size: 18.5px; line-height: 1.7; color: var(--ink); max-width: 720px; margin-bottom: 20px; }
