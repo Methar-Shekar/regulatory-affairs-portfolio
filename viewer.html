@@ -19,28 +19,74 @@
 
 <div class="viewer-shell">
   <aside class="tree-pane" id="treePane" aria-label="Document tree">
-   <div class="tree-pane-header">
-  <h2>eCTD Explorer</h2>
-  <p>Parsed live from <code>index.xml</code>. Click any file to preview it.</p>
-  <input type="text" id="treeFilter" class="tree-filter" placeholder="Filter documents…" aria-label="Filter documents" />
-</div>
+    <div class="tree-pane-header">
+      <h2>eCTD Explorer</h2>
+      <p>Parsed live from <code>index.xml</code>. Click any file to preview it.</p>
+      <!-- Search input wrapped for icon (CSS for .search-wrap already existed, now actually used) -->
+      <div class="search-wrap">
+        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/>
+        </svg>
+        <input type="text" id="treeFilter" class="tree-filter" placeholder="Filter documents…" aria-label="Filter documents" />
+      </div>
+    </div>
     <div id="treeList"><p class="error-msg" style="color:var(--ink-faint);font-style:italic;">Loading&hellip;</p></div>
+    <!-- Item 8: sticky sidebar status footnote. Populated by setSidebarStatus() in viewer.js -->
+    <div class="sidebar-status" id="sidebarStatus"></div>
   </aside>
 
   <main class="preview-pane">
-   <div class="preview-header" id="previewHeader" style="display:none;">
-  <span class="pmod-dot" id="previewDot"></span>
-  <div class="preview-heading">
-    <h2 id="previewTitle"></h2>
-    <p id="previewNote" class="preview-note"></p>
-  </div>
-  <a class="dl" id="previewDownload" href="#" download>Download PDF</a>
-</div>
-    <div class="preview-body" id="previewBody">
-      <div class="preview-empty">
-        <div class="big">Select a document</div>
-        <p>Choose any file from the tree on the left &mdash; Module 1 through Module 5 &mdash; to open it here.</p>
+    <div class="preview-header" id="previewHeader" style="display:none;">
+      <div class="preview-heading">
+        <!-- Item 3: enterprise breadcrumb (Home > Module > Section > Document) -->
+        <nav class="preview-breadcrumb" id="previewBreadcrumb" aria-label="Breadcrumb"></nav>
+        <div class="preview-title-row">
+          <span class="pmod-dot" id="previewDot"></span>
+          <span class="preview-title-icon" id="previewTitleIcon" aria-hidden="true"></span>
+          <h2 id="previewTitle"></h2>
+          <span class="status-pill" id="previewStatusPill"></span>
+        </div>
+        <p id="previewNote" class="preview-note"></p>
       </div>
+      <div class="preview-header-actions">
+        <!-- Item 11: XML inspector toggle -->
+        <button type="button" class="xml-toggle-btn" id="xmlToggleBtn" title="View raw XML backbone entry" aria-expanded="false" aria-controls="xmlInspector">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m18 16 4-4-4-4"/><path d="m6 8-4 4 4 4"/><path d="m14.5 4-5 16"/></svg>
+          <span>XML</span>
+        </button>
+        <!-- Item 7: enhanced download control -->
+        <a class="dl" id="previewDownload" href="#" download>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>
+          <span>Download</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Item 4: slim metadata bar, directly above the viewer container -->
+    <div class="meta-bar" id="metaBar" style="display:none;">
+      <span class="meta-item"><span class="meta-label">Document</span><span class="meta-value" id="metaDoc">—</span></span>
+      <span class="meta-item"><span class="meta-label">Module</span><span class="meta-value" id="metaModule">—</span></span>
+      <span class="meta-item"><span class="meta-label">Country</span><span class="meta-value" id="metaCountry">—</span></span>
+      <span class="meta-item"><span class="meta-label">Lifecycle</span><span class="meta-value" id="metaLifecycle">—</span></span>
+      <span class="meta-item"><span class="meta-label">Status</span><span class="meta-value meta-status-ok" id="metaStatus">—</span></span>
+    </div>
+
+    <div class="preview-content-row" id="previewContentRow">
+      <div class="preview-body" id="previewBody">
+        <div class="preview-empty">
+          <div class="big">Select a document</div>
+          <p>Choose any file from the tree on the left &mdash; Module 1 through Module 5 &mdash; to open it here.</p>
+        </div>
+      </div>
+
+      <!-- Item 11 (WOW): collapsible XML inspector, mirrors the active leaf's raw backbone entry -->
+      <aside class="xml-inspector" id="xmlInspector" aria-hidden="true">
+        <div class="xml-inspector-head">
+          <span>XML Source</span>
+          <button type="button" id="xmlInspectorClose" aria-label="Close XML inspector">&times;</button>
+        </div>
+        <pre class="xml-inspector-body"><code id="xmlInspectorCode">Select a document to inspect its backbone.xml entry.</code></pre>
+      </aside>
     </div>
   </main>
 </div>
