@@ -6,8 +6,6 @@ const MODULES = [
   { tag: 'm5-clinical-study-reports', num: '5', short: 'm5', full: 'Clinical / BE' },
 ];
 
-// Only Module 1's backbone nests documents inside section-level elements
-// (1.0, 1.1, 1.2 ...). Modules 2-5 hold <leaf> elements directly.
 const M1_SECTIONS = [
   { tag: 'm1-0-regional-toc', num: '1.0', label: 'Regional Table of Contents' },
   { tag: 'm1-1-forms', num: '1.1', label: 'Forms' },
@@ -25,17 +23,24 @@ function statusClass(status) {
   return '';
 }
 
+// ---------- 3. Semantic icons (outline style) ----------
 function folderIcon(colorVar) {
-  return `<svg class="node-icon" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-    <path d="M2 5.5C2 4.67 2.67 4 3.5 4H7.7L9.2 5.6H16.5C17.33 5.6 18 6.27 18 7.1V14.5C18 15.33 17.33 16 16.5 16H3.5C2.67 16 2 15.33 2 14.5V5.5Z" fill="${colorVar}"/>
+  return `<svg class="node-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:${colorVar}">
+    <path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/>
   </svg>`;
 }
 
-function fileIcon() {
-  return `<svg class="node-icon" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-    <path d="M5 2.2C5 1.8 5.3 1.5 5.7 1.5H11.4L15 5.2V17.3C15 17.7 14.7 18 14.3 18H5.7C5.3 18 5 17.7 5 17.3V2.2Z" fill="var(--stamp)"/>
-    <path d="M11.4 1.5L15 5.2H12.1C11.7 5.2 11.4 4.9 11.4 4.5V1.5Z" fill="#5F241C"/>
-  </svg>`;
+function fileIcon(kind) {
+  const badgeClass = kind === 'xml' ? 'xml' : 'pdf';
+  const label = kind === 'xml' ? 'XML' : 'PDF';
+  return `<span class="node-icon file-icon">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/>
+      <path d="M14 2v4a2 2 0 0 0 2 2h4"/>
+      <path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/>
+    </svg>
+    <span class="ext-badge ${badgeClass}">${label}</span>
+  </span>`;
 }
 
 function makeNode(classNames) {
@@ -44,7 +49,7 @@ function makeNode(classNames) {
   return el;
 }
 
-function buildFileNode(leaf, modNum) {
+function buildFileNode(leaf, modNum, ancestorPath) {
   const titleEl = leaf.querySelector('title');
   const noteEl = leaf.querySelector('note');
   const xrefEl = leaf.querySelector('xref');
@@ -54,18 +59,18 @@ function buildFileNode(leaf, modNum) {
   const href = hrefRaw ? ('ectd/0000/' + hrefRaw) : null;
   const status = leaf.getAttribute('status') || '';
   const filename = hrefRaw ? hrefRaw.split('/').pop() : title;
+  const cls = statusClass(status);
 
   const node = makeNode('file');
   const row = document.createElement('button');
   row.className = 'node-row';
   row.type = 'button';
   row.title = title + (note ? ' — ' + note : '');
-  const cls = statusClass(status);
-  row.innerHTML = `<span class="node-chevron"></span>${fileIcon()}<span class="node-label">${filename}</span>` +
+  row.innerHTML = `<span class="node-chevron"></span>${fileIcon('pdf')}<span class="node-label">${filename}</span>` +
     (cls ? `<span class="status-dot ${cls}"></span>` : '');
 
   if (href) {
-    row.addEventListener('click', () => openFile(href, title, note, modNum, row));
+    row.addEventListener('click', () => openFile(href, title, note, modNum, row, ancestorPath || [], cls));
   } else {
     row.disabled = true;
   }
@@ -74,11 +79,12 @@ function buildFileNode(leaf, modNum) {
   return node;
 }
 
-function buildFolderNode(label, subtitle, modNum, childNodes, isModuleLevel, openByDefault) {
+function buildFolderNode(label, subtitle, modNum, childNodes, isModuleLevel, openByDefault, pathId) {
   const classes = ['folder'];
   if (isModuleLevel) classes.push('module-level');
   if (openByDefault) classes.push('open');
   const node = makeNode(classes.join(' '));
+  if (pathId) node.dataset.path = pathId; // NEW: breadcrumb jump target (item 4)
 
   const row = document.createElement('button');
   row.className = 'node-row';
@@ -97,11 +103,12 @@ function buildFolderNode(label, subtitle, modNum, childNodes, isModuleLevel, ope
   return node;
 }
 
-function openFile(href, title, note, modNum, rowEl) {
+function openFile(href, title, note, modNum, rowEl, ancestorPath, statusCls) {
   const header = document.getElementById('previewHeader');
   const body = document.getElementById('previewBody');
   const titleEl = document.getElementById('previewTitle');
   const noteEl = document.getElementById('previewNote');
+  const pillEl = document.getElementById('previewStatusPill');
   const dot = document.getElementById('previewDot');
   const dl = document.getElementById('previewDownload');
 
@@ -111,6 +118,12 @@ function openFile(href, title, note, modNum, rowEl) {
     noteEl.textContent = note || '';
     noteEl.style.display = note ? 'block' : 'none';
   }
+  if (pillEl) {
+    pillEl.className = 'status-pill' + (statusCls ? ' ' + statusCls : '');
+    pillEl.textContent = statusCls ? statusCls.charAt(0).toUpperCase() + statusCls.slice(1) : '';
+    pillEl.style.display = statusCls ? 'inline-block' : 'none';
+  }
+  renderBreadcrumb(ancestorPath || [], title);
   dot.style.background = `var(--tab-m${modNum})`;
   dl.href = href;
 
@@ -122,6 +135,59 @@ function openFile(href, title, note, modNum, rowEl) {
 
   document.querySelectorAll('.node-row.active').forEach((el) => el.classList.remove('active'));
   if (rowEl) rowEl.classList.add('active');
+}
+
+// ---------- 4. Breadcrumb + jump-to-node (additive, new) ----------
+function renderBreadcrumb(ancestorPath, currentTitle) {
+  const el = document.getElementById('previewBreadcrumb');
+  if (!el) return;
+  const parts = [`<button type="button" class="crumb" data-jump="__top">Home</button>`];
+  ancestorPath.forEach((p) => {
+    parts.push(`<span class="crumb-sep">\u203A</span><button type="button" class="crumb" data-jump="${p.id}">${p.label}</button>`);
+  });
+  parts.push(`<span class="crumb-sep">\u203A</span><span class="crumb current">${currentTitle}</span>`);
+  el.innerHTML = parts.join('');
+  el.querySelectorAll('[data-jump]').forEach((btn) => {
+    btn.addEventListener('click', () => jumpToNode(btn.getAttribute('data-jump')));
+  });
+}
+
+function jumpToNode(id) {
+  const treePane = document.getElementById('treePane');
+  if (id === '__top') { treePane.scrollTo({ top: 0, behavior: 'smooth' }); return; }
+  const target = document.querySelector(`[data-path="${id}"]`);
+  if (!target) return;
+  target.classList.add('open');
+  let p = target.parentElement;
+  while (p && p !== treePane) {
+    if (p.classList && p.classList.contains('node')) p.classList.add('open');
+    p = p.parentElement;
+  }
+  target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+// ---------- 10. Sticky sidebar status (additive, new) ----------
+function setSidebarStatus(ok, msg) {
+  const el = document.getElementById('sidebarStatus');
+  if (!el) return;
+  el.classList.toggle('error', !ok);
+  el.innerHTML = `<span class="dot"></span>${msg}`;
+}
+
+// ---------- 1. Decorative root backbone-file row (additive, new) ----------
+// Only one root row: this repo has a single real backbone file
+// (ectd/0000/index.xml). No separate backbone.xml exists, so one isn't shown.
+function buildRootXmlNode() {
+  const node = makeNode('file root-xml');
+  const row = document.createElement('button');
+  row.className = 'node-row';
+  row.type = 'button';
+  row.title = 'ectd/0000/index.xml — the backbone file this tree is parsed from';
+  row.innerHTML = `<span class="node-chevron"></span>${fileIcon('xml')}<span class="node-label">index.xml</span>`;
+  row.addEventListener('click', () => window.open('ectd/0000/index.xml', '_blank'));
+  node.appendChild(row);
+  node.searchText = 'index.xml backbone';
+  return node;
 }
 
 function wireFilter() {
@@ -168,22 +234,30 @@ async function loadTree() {
     if (xml.querySelector('parsererror')) throw new Error('XML parse error in index.xml');
 
     treeList.innerHTML = '';
+    treeList.appendChild(buildRootXmlNode());
 
     for (const mod of MODULES) {
       const modEl = xml.querySelector(mod.tag);
+      const modPathId = 'm' + mod.num;
       let childNodes = [];
 
       if (mod.num === '1' && modEl) {
         for (const sec of M1_SECTIONS) {
           const secEl = modEl.querySelector(sec.tag);
+          const secPathId = modPathId + '__' + sec.num.replace(/\./g, '-');
           const leaves = secEl ? Array.from(secEl.querySelectorAll('leaf')) : [];
-          const fileNodes = leaves.map((leaf) => buildFileNode(leaf, mod.num));
-          childNodes.push(buildFolderNode(sec.num, sec.label, mod.num, fileNodes, false, true));
+          const ancestorPath = [
+            { id: modPathId, label: mod.short },
+            { id: secPathId, label: sec.num },
+          ];
+          const fileNodes = leaves.map((leaf) => buildFileNode(leaf, mod.num, ancestorPath));
+          childNodes.push(buildFolderNode(sec.num, sec.label, mod.num, fileNodes, false, true, secPathId));
         }
       } else if (modEl) {
         const leaves = Array.from(modEl.querySelectorAll('leaf'));
+        const ancestorPath = [{ id: modPathId, label: mod.short }];
         if (leaves.length) {
-          childNodes = leaves.map((leaf) => buildFileNode(leaf, mod.num));
+          childNodes = leaves.map((leaf) => buildFileNode(leaf, mod.num, ancestorPath));
         } else {
           const p = document.createElement('div');
           p.className = 'node-empty';
@@ -193,7 +267,7 @@ async function loadTree() {
       }
 
       const totalDocs = modEl ? modEl.querySelectorAll('leaf').length : 0;
-      const modNode = buildFolderNode(mod.short, mod.full, mod.num, childNodes, true, mod.num === '1');
+      const modNode = buildFolderNode(mod.short, mod.full, mod.num, childNodes, true, mod.num === '1', modPathId);
       const countEl = modNode.querySelector(':scope > .node-row .node-count');
       if (countEl) countEl.textContent = totalDocs;
       treeList.appendChild(modNode);
@@ -208,11 +282,13 @@ async function loadTree() {
     treeList.appendChild(legend);
 
     wireFilter();
+    setSidebarStatus(true, 'XML Parsed Successfully · Live from index.xml');
   } catch (err) {
     treeList.innerHTML = '<p class="error-msg">Could not load index.xml: ' + err.message +
       '.<br><br>If you\u2019re opening this file directly from disk (file://), browsers block XML ' +
       'fetches for security — serve the folder over http(s) instead (e.g. GitHub Pages, or ' +
       '<code>python3 -m http.server</code> locally).</p>';
+    setSidebarStatus(false, 'XML parse failed — see error above');
   }
 }
 
