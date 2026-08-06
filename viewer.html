@@ -19,10 +19,11 @@
 
 <div class="viewer-shell">
   <aside class="tree-pane" id="treePane" aria-label="Document tree">
-    <div class="tree-pane-header">
-      <h2>eCTD Explorer</h2>
-      <p>Parsed live from <code>index.xml</code>. Click any file to preview it.</p>
-    </div>
+   <div class="tree-pane-header">
+  <h2>eCTD Explorer</h2>
+  <p>Parsed live from <code>index.xml</code>. Click any file to preview it.</p>
+  <input type="text" id="treeFilter" class="tree-filter" placeholder="Filter documents…" aria-label="Filter documents" />
+</div>
     <div id="treeList"><p class="error-msg" style="color:var(--ink-faint);font-style:italic;">Loading&hellip;</p></div>
   </aside>
 
