@@ -473,3 +473,156 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--amber); outline
   margin: 2px 0 0;
   max-width: 60ch;
 }
+
+/* ================================================================
+   ENTERPRISE POLISH LAYER — visual only, additive
+   ================================================================ */
+
+/* ---------- 11. Dark enterprise sidebar (scoped token override) ---------- */
+/* Redefining these custom properties inside .tree-pane makes every existing
+   rule that already uses var(--ink), var(--card-border), var(--tab-m1) etc.
+   pick up dark-mode values automatically, with zero changes to those rules
+   or to any JS. Header + preview pane are untouched (different scope). */
+.tree-pane {
+  --card: #111827;
+  --bg: #1F2937;
+  --card-border: #2D3748;
+  --ink: #F9FAFB;
+  --ink-soft: #E5E7EB;
+  --ink-faint: #9CA3AF;
+  --blue-tint: #2563EB;   /* used by .node.file > .node-row.active (already existing rule) */
+  --blue-deep: #FFFFFF;
+  --stamp: #E08A78;       /* brighter PDF-badge red for dark background */
+  --tab-m1: #6C8EE0;
+  --tab-m2: #6FBF8B;
+  --tab-m3: #E0B75C;
+  --tab-m4: #B79CF0;
+  --tab-m5: #E08A78;
+}
+
+/* ---------- 12. High information density ---------- */
+.tree-pane { padding: 10px 14px 46px; }
+.tree-pane-header { padding: 2px 4px 8px; }
+.tree-pane-header h2 { font-size: 14px; margin: 0 0 2px; }
+.node-row { padding: 4px 6px; font-size: 12px; }
+.preview-header { padding: 10px 20px; }
+.preview-body { padding: 10px 14px 14px; }
+
+/* ---------- 3. Semantic icon system (outline style, Lucide-derived paths) ---------- */
+.node-icon { width: 15px; height: 15px; flex: 0 0 auto; }
+.node-icon svg { width: 100%; height: 100%; display: block; }
+.node-icon.file-icon { position: relative; display: inline-flex; }
+.ext-badge {
+  position: absolute;
+  right: -3px;
+  bottom: -3px;
+  font-family: var(--mono);
+  font-size: 5.5px;
+  font-weight: 700;
+  line-height: 1;
+  padding: 1px 2px;
+  border-radius: 2px;
+  color: #fff;
+  letter-spacing: 0.02em;
+}
+.ext-badge.pdf { background: var(--stamp); }
+.ext-badge.xml { background: #64748B; }
+.node.root-xml > .node-row { font-style: italic; color: var(--ink-faint); margin-bottom: 4px; }
+
+/* ---------- 2. Tree connector lines ---------- */
+.node-children > .node { position: relative; }
+.node-children > .node::before {
+  content: "";
+  position: absolute;
+  left: -10px;
+  top: 13px;
+  width: 9px;
+  height: 1px;
+  background: var(--card-border);
+}
+
+/* ---------- 5. Cumulative active-ancestor path highlighting ---------- */
+/* Pure CSS via :has() — no JS needed. Matches any folder that contains the
+   active file at any depth, so the whole ancestor chain lights up together,
+   VS Code-explorer style. Degrades gracefully on browsers without :has(). */
+.node.folder:has(.node-row.active) > .node-row {
+  background: rgba(37, 99, 235, 0.14);
+}
+.node.folder:has(.node-row.active) > .node-row .node-label,
+.node.folder:has(.node-row.active) > .node-row .node-sub {
+  color: var(--ink);
+}
+
+/* ---------- 6. Custom scrollbar (sidebar only — PDF iframe is untouched,
+   it renders its own document and is unreachable by parent-page CSS) ---------- */
+.tree-pane { scrollbar-width: thin; scrollbar-color: #2563EB transparent; }
+.tree-pane::-webkit-scrollbar { width: 8px; }
+.tree-pane::-webkit-scrollbar-track { background: transparent; }
+.tree-pane::-webkit-scrollbar-thumb { background: #2563EB; border-radius: 8px; }
+.tree-pane::-webkit-scrollbar-thumb:hover { background: #3B76F0; }
+
+/* ---------- 7. Smooth fold/unfold (max-height transition, DOM-safe) ---------- */
+.node-children {
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  transition: max-height 200ms ease, opacity 150ms ease;
+}
+.node.open > .node-children { max-height: 2000px; opacity: 1; }
+.node-chevron { transition: transform 200ms ease; }
+
+/* ---------- 8. Modernized search ---------- */
+.search-wrap { position: relative; margin-top: 10px; }
+.search-wrap .tree-filter { margin-top: 0; padding-left: 28px; border-radius: 8px; transition: box-shadow 150ms ease, border-color 150ms ease; }
+.search-wrap .tree-filter:focus { box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.25); border-color: #2563EB; outline: none; }
+.search-icon { position: absolute; left: 9px; top: 50%; transform: translateY(-50%); width: 14px; height: 14px; color: var(--ink-faint); pointer-events: none; }
+
+/* ---------- 9. PDF container — floating enterprise card ---------- */
+.preview-body iframe {
+  border: none;
+  border-radius: 14px;
+  box-shadow: 0 2px 10px rgba(15,23,42,0.10), 0 12px 32px rgba(15,23,42,0.10);
+  background: #fff;
+}
+
+/* ---------- 4. Breadcrumb ---------- */
+.preview-breadcrumb { display: flex; align-items: center; flex-wrap: wrap; gap: 4px; font-family: var(--mono); font-size: 11px; margin: 0 0 4px; }
+.preview-breadcrumb .crumb { background: none; border: none; padding: 0; cursor: pointer; color: var(--ink-faint); font: inherit; }
+.preview-breadcrumb .crumb:hover { color: var(--blue-deep); text-decoration: underline; }
+.preview-breadcrumb .crumb.current { color: var(--ink); font-weight: 600; cursor: default; text-decoration: none; }
+.preview-breadcrumb .crumb-sep { color: var(--card-border); }
+.preview-title-row { display: flex; align-items: center; gap: 8px; }
+.preview-title-row h2 { margin: 0; }
+.status-pill {
+  display: none;
+  font-family: var(--mono);
+  font-size: 9.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  padding: 2px 8px;
+  border-radius: 10px;
+  border: 1px solid var(--card-border);
+  color: var(--ink-faint);
+  flex: 0 0 auto;
+}
+.status-pill.final { color: var(--green); border-color: var(--green); }
+.status-pill.placeholder { color: var(--ink-faint); }
+.status-pill.supplementary { color: var(--amber); border-color: var(--amber); }
+
+/* ---------- 10. Sticky sidebar status ---------- */
+.sidebar-status {
+  position: sticky;
+  bottom: 0;
+  margin: 10px -14px -46px;
+  padding: 8px 14px;
+  background: var(--bg);
+  border-top: 1px solid var(--card-border);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  color: var(--ink-faint);
+}
+.sidebar-status .dot { width: 6px; height: 6px; border-radius: 50%; background: #22C55E; flex: 0 0 auto; }
+.sidebar-status.error .dot { background: #EF4444; }
