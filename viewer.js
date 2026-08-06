@@ -236,7 +236,7 @@ function openFile({ href, title, note, modNum, rowEl, ancestorPath, statusCls, i
     pillEl.textContent = statusCls.charAt(0).toUpperCase() + statusCls.slice(1);
     pillEl.style.display = 'inline-block';
   }
-  renderBreadcrumb(ancestorPath || [], title);
+  renderBreadcrumb(ancestorPath || []);
   dot.style.background = `var(--tab-m${modNum})`;
   dl.href = href;
 
@@ -355,14 +355,20 @@ function wireDetailsPanel() {
 
 // ---------- Breadcrumb ----------
 // "Home" now also resets the preview pane to the dashboard, not just scrolls.
-function renderBreadcrumb(ancestorPath, currentTitle) {
+function renderBreadcrumb(ancestorPath) {
+  // Stops at the last ancestor folder — the document title is already shown
+  // as the H2 directly below, so repeating it here as a final crumb was
+  // pure duplication (flagged earlier, actually fixed now).
   const el = document.getElementById('previewBreadcrumb');
   if (!el) return;
   const parts = [`<button type="button" class="crumb" data-jump="__top">Home</button>`];
-  ancestorPath.forEach((p) => {
-    parts.push(`<span class="crumb-sep">\u203A</span><button type="button" class="crumb" data-jump="${p.id}">${p.label}</button>`);
+  ancestorPath.forEach((p, i) => {
+    const isLast = i === ancestorPath.length - 1;
+    parts.push(`<span class="crumb-sep">\u203A</span>` +
+      (isLast
+        ? `<span class="crumb current">${p.label}</span>`
+        : `<button type="button" class="crumb" data-jump="${p.id}">${p.label}</button>`));
   });
-  parts.push(`<span class="crumb-sep">\u203A</span><span class="crumb current">${currentTitle}</span>`);
   el.innerHTML = parts.join('');
   el.querySelectorAll('[data-jump]').forEach((btn) => {
     btn.addEventListener('click', () => jumpToNode(btn.getAttribute('data-jump')));
