@@ -62,8 +62,9 @@
 
     <m1-3-administrative-information status="final">
       <leaf operation="new" id="m1-3-admin">
-        <title>1.3 Administrative Information (contact/sponsor, debarment, financial disclosure, patent/exclusivity, waivers, field copy certification, user fee cover sheet — all as academic placeholders)</title>
-        <xref href="m1/us/1.3-administrative-information/administrative-information.pdf"/>
+  <title>1.3 Administrative Information</title>
+  <note>Contact/sponsor info, debarment, financial disclosure, patent/exclusivity, waivers, field copy certification, user fee cover sheet — all as academic placeholders.</note>
+  <xref href="m1/us/1.3-administrative-information/administrative-information.pdf"/>
       </leaf>
     </m1-3-administrative-information>
 
@@ -80,8 +81,9 @@
 
     <m1-14-basis-for-anda-submission status="supplementary-only">
       <leaf operation="new" id="m1-14-biopharm-discussion" status="supplementary">
-        <title>1.14 Biopharmaceutics Classification — Supplementary Discussion (not the submission basis; submission basis is Module 5 in vivo BE data)</title>
-        <xref href="m1/us/1.14-basis-for-submission/biopharmaceutics-classification-discussion.pdf"/>
+  <title>1.14 Biopharmaceutics Classification</title>
+  <note>Supplementary discussion only — not the submission basis. Submission basis is the Module 5 in vivo BE data.</note>
+  <xref href="m1/us/1.14-basis-for-submission/biopharmaceutics-classification-discussion.pdf"/>
       </leaf>
     </m1-14-basis-for-anda-submission>
 
@@ -119,14 +121,16 @@
       <xref href="m4/4.2-nonclinical-written-summary.pdf"/>
     </leaf>
     <leaf operation="new" id="m4-3-reports">
-      <title>4.3 Nonclinical Study Reports (none submitted — waiver basis per 21 CFR 314.94(a)(8))</title>
+      <title>4.3 Nonclinical Study Reports</title>
+<note>None submitted — waiver basis per 21 CFR 314.94(a)(8).</note>
       <xref href="m4/4.3-nonclinical-study-reports.pdf"/>
     </leaf>
   </m4-nonclinical-study-reports>
 
   <m5-clinical-study-reports status="final">
     <leaf operation="new" id="m5-3-1-be-synopsis">
-      <title>5.3.1 Bioequivalence Study Report Synopsis (+ Comparative Dissolution Data) — all PK/dissolution results illustrative/hypothetical</title>
+      <title>5.3.1 Bioequivalence Study Report Synopsis</title>
+<note>Includes comparative dissolution data. All PK/dissolution results are illustrative/hypothetical.</note>
       <xref href="m5/bioequivalence-study-synopsis.pdf"/>
     </leaf>
   </m5-clinical-study-reports>
