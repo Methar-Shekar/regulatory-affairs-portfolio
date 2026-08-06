@@ -392,3 +392,36 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--amber); outline
 @media (prefers-reduced-motion: reduce) {
   .msection { opacity: 1; transform: none; }
 }
+.tree-filter {
+  width: 100%;
+  margin-top: 10px;
+  padding: 7px 10px;
+  font-family: var(--sans);
+  font-size: 12.5px;
+  border: 1px solid var(--card-border);
+  border-radius: var(--r-sm);
+  background: var(--bg);
+  color: var(--ink);
+}
+.tree-filter:focus { outline: 2px solid var(--blue-deep); outline-offset: -1px; }
+
+.mod-header .mcount {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  color: var(--ink-faint);
+  background: var(--bg);
+  border-radius: 8px;
+  padding: 1px 6px;
+  margin-right: 2px;
+}
+
+.file-item.active { border-left-width: 3px; }
+
+.file-badge { margin-left: 6px; }
+
+.preview-note {
+  font-size: 12px;
+  color: var(--ink-faint);
+  margin: 2px 0 0;
+  max-width: 60ch;
+}
