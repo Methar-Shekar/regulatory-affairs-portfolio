@@ -172,6 +172,9 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--amber); outline
     transform: translateX(-100%);
     transition: transform 0.25s ease;
     box-shadow: var(--shadow-hover);
+    justify-content: flex-start;
+    padding-top: 50px;
+    padding-bottom: 70px;
   }
   .sidebar.open { transform: translateX(0); }
 }
