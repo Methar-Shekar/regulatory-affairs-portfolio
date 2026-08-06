@@ -15,16 +15,22 @@ const M1_SECTIONS = [
   { tag: 'm1-14-basis-for-anda-submission', num: '1.14', label: 'Basis for ANDA Submission' },
 ];
 
-// Section tags that get a distinct semantic icon instead of the generic PDF icon (item 2)
 const FORM_SECTION_TAGS = ['m1-1-forms'];
 const LABEL_SECTION_TAGS = ['m1-11-labeling'];
 
+// Kept around so the "Home" breadcrumb crumb can reset the preview pane
+// back to the dashboard without re-fetching/re-parsing the XML.
+let lastXmlDoc = null;
+let currentLeafXml = null;   // escaped, for display
+let currentLeafXmlRaw = null; // unescaped, for the Copy button
+let currentProps = null;
+
 function statusClass(status) {
-  if (!status) return '';
+  if (!status) return 'final'; // untagged leaves default to Final, not blank (item from prior review)
   if (status.indexOf('final') !== -1) return 'final';
   if (status.indexOf('placeholder') !== -1) return 'placeholder';
   if (status.indexOf('supplementary') !== -1) return 'supplementary';
-  return '';
+  return 'final';
 }
 
 function escapeHtml(str) {
@@ -33,15 +39,19 @@ function escapeHtml(str) {
   }[c]));
 }
 
-// ---------- Semantic icon system (item 2) ----------
+function formatBytes(n) {
+  if (n < 1024) return n + ' B';
+  if (n < 1024 * 1024) return (n / 1024).toFixed(1) + ' KB';
+  return (n / 1024 / 1024).toFixed(2) + ' MB';
+}
+
+// ---------- Semantic icon system ----------
 function folderIcon(colorVar) {
   return `<svg class="node-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:${colorVar}">
     <path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/>
   </svg>`;
 }
 
-// kind: 'pdf' | 'xml' | 'form' | 'label'
-// Same file-glyph base for scan-friendliness, distinct badge text + accent per type.
 function fileIcon(kind) {
   const map = {
     xml:   { badge: 'XML', cls: 'xml' },
@@ -50,8 +60,6 @@ function fileIcon(kind) {
     pdf:   { badge: 'PDF', cls: 'pdf' },
   };
   const m = map[kind] || map.pdf;
-
-  // Forms get a checklist glyph, labels get a tag glyph, everything else the plain doc glyph.
   let inner;
   if (kind === 'form') {
     inner = `<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/>
@@ -63,7 +71,6 @@ function fileIcon(kind) {
     inner = `<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/>
       <path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/>`;
   }
-
   return `<span class="node-icon file-icon">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${inner}</svg>
     <span class="ext-badge ${m.cls}">${m.badge}</span>
@@ -76,10 +83,9 @@ function makeNode(classNames) {
   return el;
 }
 
-// Build the raw <leaf> snippet exactly as it exists in index.xml, for the XML inspector.
-// NOTE: this repo's simplified backbone does not carry checksum/xlink:href attributes —
-// only operation, id, an optional status, <title>, and <xref href>. The inspector mirrors
-// the *real* attributes present rather than inventing ones that don't exist in the file.
+// Mirrors the real <leaf> attributes present in index.xml — operation, id,
+// optional status, <title>, <xref href>. No checksum/xlink attributes are
+// added because this backbone genuinely doesn't carry them.
 function buildRawLeafXml(leaf) {
   const id = leaf.getAttribute('id') || '';
   const operation = leaf.getAttribute('operation') || '';
@@ -92,8 +98,7 @@ function buildRawLeafXml(leaf) {
   const attrs = [`operation="${operation}"`, `id="${id}"`];
   if (status) attrs.push(`status="${status}"`);
 
-  const xml = `<leaf ${attrs.join(' ')}>\n  <title>${title}</title>\n  <xref href="${href}"/>\n</leaf>`;
-  return escapeHtml(xml);
+  return `<leaf ${attrs.join(' ')}>\n  <title>${title}</title>\n  <xref href="${href}"/>\n</leaf>`;
 }
 
 function buildFileNode(leaf, modNum, ancestorPath, kind) {
@@ -114,13 +119,13 @@ function buildFileNode(leaf, modNum, ancestorPath, kind) {
   row.className = 'node-row';
   row.type = 'button';
   row.title = title + (note ? ' — ' + note : '');
-  row.innerHTML = `<span class="node-chevron"></span>${fileIcon(iconKind)}<span class="node-label">${filename}</span>` +
-    (cls ? `<span class="status-dot ${cls}"></span>` : '');
+  row.innerHTML = `<span class="node-chevron"></span>${fileIcon(iconKind)}<span class="node-label" data-raw="${escapeHtml(filename)}">${escapeHtml(filename)}</span>` +
+    `<span class="status-dot ${cls}"></span>`;
 
   if (href) {
     row.addEventListener('click', () => openFile({
       href, title, note, modNum, rowEl: row,
-      ancestorPath: ancestorPath || [], statusCls: cls, iconKind, leaf,
+      ancestorPath: ancestorPath || [], statusCls: cls, iconKind, leaf, hrefRaw,
     }));
   } else {
     row.disabled = true;
@@ -154,11 +159,60 @@ function buildFolderNode(label, subtitle, modNum, childNodes, isModuleLevel, ope
   return node;
 }
 
-// Keeps the currently active leaf's raw XML around so the inspector can be
-// opened/closed independently of which document is loaded (item 11).
-let currentLeafXml = null;
+// ---------- Dashboard (item 2) ----------
+// Everything here comes from the parsed <admin> block and live leaf counts —
+// nothing hardcoded.
+function renderDashboard(xml) {
+  const body = document.getElementById('previewBody');
+  if (!body || !xml) return;
 
-function openFile({ href, title, note, modNum, rowEl, ancestorPath, statusCls, iconKind, leaf }) {
+  const admin = xml.querySelector('admin');
+  const applicant = admin?.querySelector('applicant')?.textContent || '—';
+  const productName = admin?.querySelector('product-name')?.textContent || '—';
+  const submissionType = admin?.querySelector('submission-type')?.textContent || '—';
+  const ectdEl = xml.querySelector('ectd');
+  const sequence = ectdEl ? (ectdEl.getAttribute('sequence') || '—') : '—';
+
+  const allLeaves = Array.from(xml.querySelectorAll('leaf'));
+  const pdfCount = allLeaves.length;
+  const xmlCount = 1; // index.xml itself — no other XML files exist in this backbone
+  const totalCount = pdfCount + xmlCount;
+
+  const moduleRows = MODULES.map((mod) => {
+    const modEl = xml.querySelector(mod.tag);
+    const count = modEl ? modEl.querySelectorAll('leaf').length : 0;
+    return `<div class="dmod-row">
+      <span class="dmod-name">${mod.short.toUpperCase()} — ${mod.full}</span>
+      <span>${count} doc${count === 1 ? '' : 's'} <span class="dmod-check ${count === 0 ? 'empty' : ''}">${count > 0 ? '\u2713' : '\u2014'}</span></span>
+    </div>`;
+  }).join('');
+
+  body.innerHTML = `
+    <div class="dashboard">
+      <div class="dashboard-head">
+        <h3>${escapeHtml(productName)}</h3>
+        <p>${escapeHtml(applicant)} &middot; ${escapeHtml(submissionType)} &middot; Sequence ${escapeHtml(sequence)}</p>
+      </div>
+      <div class="dashboard-stats">
+        <div class="dstat"><div class="dnum">${totalCount}</div><div class="dlabel">Total Files</div></div>
+        <div class="dstat"><div class="dnum">${xmlCount}</div><div class="dlabel">XML</div></div>
+        <div class="dstat"><div class="dnum">${pdfCount}</div><div class="dlabel">PDF</div></div>
+      </div>
+      <div class="dashboard-modules">${moduleRows}</div>
+      <p class="dashboard-hint">No document selected. Select a document from the XML Explorer on the left. XML Parsed Successfully.</p>
+    </div>`;
+}
+
+function resetPreviewToDashboard() {
+  document.getElementById('previewHeader').style.display = 'none';
+  document.getElementById('metaBar').style.display = 'none';
+  document.querySelectorAll('.node-row.active').forEach((el) => el.classList.remove('active'));
+  setDetailsPanelOpen(false);
+  renderDashboard(lastXmlDoc);
+}
+
+// ---------- Main document open ----------
+function openFile({ href, title, note, modNum, rowEl, ancestorPath, statusCls, iconKind, leaf, hrefRaw }) {
   const header = document.getElementById('previewHeader');
   const metaBar = document.getElementById('metaBar');
   const body = document.getElementById('previewBody');
@@ -179,27 +233,41 @@ function openFile({ href, title, note, modNum, rowEl, ancestorPath, statusCls, i
   }
   if (pillEl) {
     pillEl.className = 'status-pill' + (statusCls ? ' ' + statusCls : '');
-    pillEl.textContent = statusCls ? statusCls.charAt(0).toUpperCase() + statusCls.slice(1) : '';
-    pillEl.style.display = statusCls ? 'inline-block' : 'none';
+    pillEl.textContent = statusCls.charAt(0).toUpperCase() + statusCls.slice(1);
+    pillEl.style.display = 'inline-block';
   }
   renderBreadcrumb(ancestorPath || [], title);
   dot.style.background = `var(--tab-m${modNum})`;
   dl.href = href;
 
-  // ---------- Item 4: slim metadata bar ----------
+  // ---------- Metadata bar ----------
   const modInfo = MODULES.find((m) => m.num === modNum);
-  document.getElementById('metaDoc').textContent = title;
-  document.getElementById('metaModule').textContent = modInfo ? `${modInfo.short.toUpperCase()} — ${modInfo.full}` : `M${modNum}`;
-  document.getElementById('metaCountry').textContent = 'United States (FDA)';
+  document.getElementById('metaRegion').textContent = 'US';
+  document.getElementById('metaSubmission').textContent = 'ANDA';
+  document.getElementById('metaModule').textContent = modInfo ? modInfo.short.toUpperCase() : `M${modNum}`;
   const operation = leaf ? (leaf.getAttribute('operation') || 'new') : 'new';
   document.getElementById('metaLifecycle').textContent = operation.charAt(0).toUpperCase() + operation.slice(1);
+  const seq = lastXmlDoc?.querySelector('ectd')?.getAttribute('sequence') || '—';
+  document.getElementById('metaSequence').textContent = seq;
   document.getElementById('metaStatus').textContent = 'XML Parsed \u2713';
 
-  // ---------- Item 11: XML inspector content ----------
-  currentLeafXml = leaf ? buildRawLeafXml(leaf) : null;
-  refreshXmlInspector();
+  // ---------- Details panel: XML tab ----------
+  currentLeafXmlRaw = leaf ? buildRawLeafXml(leaf) : null;
+  currentLeafXml = currentLeafXmlRaw ? escapeHtml(currentLeafXmlRaw) : null;
+  refreshXmlTab();
 
-  // ---------- Item 10: skeleton loader while the PDF swaps in ----------
+  // ---------- Details panel: Properties tab ----------
+  currentProps = {
+    filename: hrefRaw ? hrefRaw.split('/').pop() : title,
+    module: modInfo ? `${modInfo.short.toUpperCase()} — ${modInfo.full}` : `M${modNum}`,
+    leafId: leaf ? (leaf.getAttribute('id') || '—') : '—',
+    operation: operation,
+    path: hrefRaw || '—',
+    href,
+  };
+  refreshPropsTab();
+
+  // ---------- Skeleton loader while the PDF swaps in ----------
   body.innerHTML = '<div class="skeleton-loader" aria-hidden="true"><div class="sk-bar"></div><div class="sk-bar short"></div></div>';
   const iframe = document.createElement('iframe');
   iframe.src = href;
@@ -216,32 +284,77 @@ function openFile({ href, title, note, modNum, rowEl, ancestorPath, statusCls, i
   if (rowEl) rowEl.classList.add('active');
 }
 
-// ---------- Item 11: collapsible XML inspector wiring ----------
-function refreshXmlInspector() {
+// ---------- Details panel: tabs, XML, Properties, Copy ----------
+function refreshXmlTab() {
   const codeEl = document.getElementById('xmlInspectorCode');
   if (!codeEl) return;
   codeEl.innerHTML = currentLeafXml || 'Select a document to inspect its backbone.xml entry.';
 }
 
-function wireXmlInspector() {
-  const toggleBtn = document.getElementById('xmlToggleBtn');
-  const closeBtn = document.getElementById('xmlInspectorClose');
-  const panel = document.getElementById('xmlInspector');
-  if (!toggleBtn || !panel) return;
+function refreshPropsTab() {
+  if (!currentProps) return;
+  document.getElementById('propFilename').textContent = currentProps.filename;
+  document.getElementById('propModule').textContent = currentProps.module;
+  document.getElementById('propLeafId').textContent = currentProps.leafId;
+  document.getElementById('propOperation').textContent = currentProps.operation;
+  document.getElementById('propPath').textContent = currentProps.path;
 
-  function setOpen(open) {
-    panel.classList.toggle('open', open);
-    panel.setAttribute('aria-hidden', open ? 'false' : 'true');
-    toggleBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
-    toggleBtn.classList.toggle('active', open);
-    if (open) refreshXmlInspector();
-  }
-
-  toggleBtn.addEventListener('click', () => setOpen(!panel.classList.contains('open')));
-  if (closeBtn) closeBtn.addEventListener('click', () => setOpen(false));
+  // File size fetched on demand (real HEAD request), not fabricated.
+  const sizeEl = document.getElementById('propFileSize');
+  sizeEl.textContent = 'Checking…';
+  fetch(currentProps.href, { method: 'HEAD' })
+    .then((res) => {
+      const len = res.headers.get('content-length');
+      sizeEl.textContent = len ? formatBytes(parseInt(len, 10)) : 'Unavailable';
+    })
+    .catch(() => { sizeEl.textContent = 'Unavailable'; });
 }
 
-// ---------- Breadcrumb + jump-to-node (item 3) ----------
+function setDetailsPanelOpen(open) {
+  const panel = document.getElementById('detailsPanel');
+  const toggleBtn = document.getElementById('detailsToggleBtn');
+  if (!panel || !toggleBtn) return;
+  panel.classList.toggle('open', open);
+  panel.setAttribute('aria-hidden', open ? 'false' : 'true');
+  toggleBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+  toggleBtn.classList.toggle('active', open);
+}
+
+function wireDetailsPanel() {
+  const toggleBtn = document.getElementById('detailsToggleBtn');
+  const closeBtn = document.getElementById('detailsPanelClose');
+  const panel = document.getElementById('detailsPanel');
+  const copyBtn = document.getElementById('copyXmlBtn');
+  const tabBtns = document.querySelectorAll('.panel-tab');
+  if (!toggleBtn || !panel) return;
+
+  toggleBtn.addEventListener('click', () => setDetailsPanelOpen(!panel.classList.contains('open')));
+  if (closeBtn) closeBtn.addEventListener('click', () => setDetailsPanelOpen(false));
+
+  tabBtns.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const target = btn.getAttribute('data-tab');
+      document.querySelectorAll('.panel-tab').forEach((b) => b.classList.toggle('active', b === btn));
+      document.querySelectorAll('.panel-tab-content').forEach((c) => {
+        c.classList.toggle('active', c.getAttribute('data-tab-content') === target);
+      });
+    });
+  });
+
+  if (copyBtn) {
+    copyBtn.addEventListener('click', () => {
+      if (!currentLeafXmlRaw) return;
+      navigator.clipboard.writeText(currentLeafXmlRaw).then(() => {
+        const original = copyBtn.textContent;
+        copyBtn.textContent = 'Copied!';
+        setTimeout(() => { copyBtn.textContent = original; }, 1400);
+      });
+    });
+  }
+}
+
+// ---------- Breadcrumb ----------
+// "Home" now also resets the preview pane to the dashboard, not just scrolls.
 function renderBreadcrumb(ancestorPath, currentTitle) {
   const el = document.getElementById('previewBreadcrumb');
   if (!el) return;
@@ -258,7 +371,11 @@ function renderBreadcrumb(ancestorPath, currentTitle) {
 
 function jumpToNode(id) {
   const treePane = document.getElementById('treePane');
-  if (id === '__top') { treePane.scrollTo({ top: 0, behavior: 'smooth' }); return; }
+  if (id === '__top') {
+    treePane.scrollTo({ top: 0, behavior: 'smooth' });
+    resetPreviewToDashboard();
+    return;
+  }
   const target = document.querySelector(`[data-path="${id}"]`);
   if (!target) return;
   target.classList.add('open');
@@ -270,7 +387,7 @@ function jumpToNode(id) {
   target.scrollIntoView({ behavior: 'smooth', block: 'center' });
 }
 
-// ---------- Sticky sidebar status (item 8) ----------
+// ---------- Sticky sidebar status ----------
 function setSidebarStatus(ok, msg) {
   const el = document.getElementById('sidebarStatus');
   if (!el) return;
@@ -278,9 +395,47 @@ function setSidebarStatus(ok, msg) {
   el.innerHTML = `<span class="dot"></span>${msg}`;
 }
 
-// ---------- Root backbone-file row (item 1) ----------
+// ---------- Validation widget (item 3) ----------
+// Real checks: parses status, structure presence, live HEAD requests against
+// every PDF, lifecycle-attribute presence, sequence-attribute presence.
+async function computeAndRenderValidation(xml, allHrefs) {
+  const widget = document.getElementById('validationWidget');
+  if (!widget) return;
+
+  const checks = [];
+  checks.push({ label: 'XML Parsed', ok: true });
+
+  const structureOk = MODULES.every((m) => !!xml.querySelector(m.tag));
+  checks.push({ label: 'XML Structure Valid', ok: structureOk });
+
+  let brokenCount = 0;
+  try {
+    const results = await Promise.allSettled(allHrefs.map((href) => fetch(href, { method: 'HEAD' })));
+    brokenCount = results.filter((r) => r.status !== 'fulfilled' || !r.value.ok).length;
+  } catch (e) {
+    brokenCount = allHrefs.length; // couldn't check — report honestly, don't claim success
+  }
+  checks.push({
+    label: `PDF Linked (${allHrefs.length - brokenCount}/${allHrefs.length})`,
+    ok: brokenCount === 0,
+  });
+
+  const leaves = Array.from(xml.querySelectorAll('leaf'));
+  const lifecycleOk = leaves.length > 0 && leaves.every((l) => !!l.getAttribute('operation'));
+  checks.push({ label: 'Lifecycle Valid', ok: lifecycleOk });
+
+  const seq = xml.querySelector('ectd')?.getAttribute('sequence') || '';
+  checks.push({ label: `Sequence Ready (${seq || '\u2014'})`, ok: !!seq });
+
+  widget.innerHTML = `<p class="v-title">Validation Status</p>` + checks.map((c) =>
+    `<span class="v-check ${c.ok ? 'ok' : 'fail'}"><span class="v-dot"></span>${c.label}</span>`
+  ).join('');
+}
+
+// ---------- Root backbone-file row ----------
 // Only one root row: this repo has a single real backbone file (ectd/0000/index.xml).
-// No separate backbone.xml exists in this project, so one isn't fabricated here.
+// No backbone.xml or util/ folder exist in this project, so they aren't shown as
+// clickable nodes — that would just be a dead link dressed up as structure.
 function buildRootXmlNode() {
   const node = makeNode('file root-xml');
   const row = document.createElement('button');
@@ -294,37 +449,61 @@ function buildRootXmlNode() {
   return node;
 }
 
+// ---------- Search: filter, auto-expand, highlight, result count ----------
+function highlightText(text, q) {
+  if (!q) return escapeHtml(text);
+  const idx = text.toLowerCase().indexOf(q);
+  if (idx === -1) return escapeHtml(text);
+  return escapeHtml(text.slice(0, idx)) + '<mark>' + escapeHtml(text.slice(idx, idx + q.length)) + '</mark>' + escapeHtml(text.slice(idx + q.length));
+}
+
 function wireFilter() {
   const input = document.getElementById('treeFilter');
   const treeList = document.getElementById('treeList');
+  const countEl = document.getElementById('searchResultCount');
   if (!input) return;
-
-  function apply(el, q) {
-    if (!el.classList || !el.classList.contains('node')) return true;
-    if (el.classList.contains('file')) {
-      const match = !q || (el.searchText || '').indexOf(q) !== -1;
-      el.style.display = match ? '' : 'none';
-      return match;
-    }
-    const childrenWrap = el.querySelector(':scope > .node-children');
-    let childMatch = false;
-    if (childrenWrap) {
-      Array.from(childrenWrap.children).forEach((child) => {
-        if (apply(child, q)) childMatch = true;
-      });
-    }
-    const selfMatch = q ? (el.searchText || '').indexOf(q) !== -1 : true;
-    const visible = !q || childMatch || selfMatch;
-    el.style.display = visible ? '' : 'none';
-    if (q && visible) el.classList.add('open');
-    return visible;
-  }
 
   input.addEventListener('input', () => {
     const q = input.value.trim().toLowerCase();
+    let matchCount = 0;
+
+    function apply(el) {
+      if (!el.classList || !el.classList.contains('node')) return true;
+      if (el.classList.contains('file')) {
+        const match = !q || (el.searchText || '').indexOf(q) !== -1;
+        el.style.display = match ? '' : 'none';
+        const labelEl = el.querySelector('.node-label[data-raw]');
+        if (labelEl) labelEl.innerHTML = highlightText(labelEl.getAttribute('data-raw'), q);
+        if (match && q) matchCount++;
+        return match;
+      }
+      const childrenWrap = el.querySelector(':scope > .node-children');
+      let childMatch = false;
+      if (childrenWrap) {
+        Array.from(childrenWrap.children).forEach((child) => {
+          if (apply(child)) childMatch = true;
+        });
+      }
+      const selfMatch = q ? (el.searchText || '').indexOf(q) !== -1 : true;
+      const visible = !q || childMatch || selfMatch;
+      el.style.display = visible ? '' : 'none';
+      if (q && visible) el.classList.add('open');
+      return visible;
+    }
+
     Array.from(treeList.children).forEach((topNode) => {
-      if (topNode.classList.contains('node')) apply(topNode, q);
+      if (topNode.classList.contains('node')) apply(topNode);
     });
+
+    if (countEl) {
+      if (q) {
+        countEl.textContent = `${matchCount} result${matchCount === 1 ? '' : 's'} found`;
+        countEl.style.display = 'block';
+      } else {
+        countEl.textContent = '';
+        countEl.style.display = 'none';
+      }
+    }
   });
 }
 
@@ -336,9 +515,12 @@ async function loadTree() {
     const text = await res.text();
     const xml = new DOMParser().parseFromString(text, 'application/xml');
     if (xml.querySelector('parsererror')) throw new Error('XML parse error in index.xml');
+    lastXmlDoc = xml;
 
     treeList.innerHTML = '';
     treeList.appendChild(buildRootXmlNode());
+
+    const allHrefs = [];
 
     for (const mod of MODULES) {
       const modEl = xml.querySelector(mod.tag);
@@ -358,6 +540,10 @@ async function loadTree() {
             : LABEL_SECTION_TAGS.includes(sec.tag) ? 'label'
             : 'pdf';
           const fileNodes = leaves.map((leaf) => buildFileNode(leaf, mod.num, ancestorPath, kind));
+          leaves.forEach((leaf) => {
+            const href = leaf.querySelector('xref')?.getAttribute('href');
+            if (href) allHrefs.push('ectd/0000/' + href);
+          });
           childNodes.push(buildFolderNode(sec.num, sec.label, mod.num, fileNodes, false, true, secPathId));
         }
       } else if (modEl) {
@@ -365,6 +551,10 @@ async function loadTree() {
         const ancestorPath = [{ id: modPathId, label: mod.short }];
         if (leaves.length) {
           childNodes = leaves.map((leaf) => buildFileNode(leaf, mod.num, ancestorPath, 'pdf'));
+          leaves.forEach((leaf) => {
+            const href = leaf.querySelector('xref')?.getAttribute('href');
+            if (href) allHrefs.push('ectd/0000/' + href);
+          });
         } else {
           const p = document.createElement('div');
           p.className = 'node-empty';
@@ -389,8 +579,12 @@ async function loadTree() {
     treeList.appendChild(legend);
 
     wireFilter();
-    wireXmlInspector();
+    wireDetailsPanel();
+    renderDashboard(xml);
     setSidebarStatus(true, 'XML Parsed Successfully · Live from index.xml · Sequence 0000');
+
+    // Validation checks run after first paint so they don't block the tree from appearing.
+    computeAndRenderValidation(xml, allHrefs);
   } catch (err) {
     treeList.innerHTML = '<p class="error-msg">Could not load index.xml: ' + err.message +
       '.<br><br>If you\u2019re opening this file directly from disk (file://), browsers block XML ' +
