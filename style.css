@@ -466,19 +466,6 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--amber); outline
 }
 .tree-filter:focus { outline: 2px solid var(--blue-deep); outline-offset: -1px; }.preview-heading { display: flex; flex-direction: column; gap: 2px; flex: 1; }
 
-.mod-header .mcount {
-  font-family: var(--mono);
-  font-size: 10.5px;
-  color: var(--ink-faint);
-  background: var(--bg);
-  border-radius: 8px;
-  padding: 1px 6px;
-  margin-right: 2px;
-}
-
-.file-item.active { border-left-width: 3px; }
-
-.file-badge { margin-left: 6px; }
 
 .preview-note {
   font-size: 12px;
