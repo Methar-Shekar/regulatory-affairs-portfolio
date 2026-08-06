@@ -626,3 +626,209 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--amber); outline
 }
 .sidebar-status .dot { width: 6px; height: 6px; border-radius: 50%; background: #22C55E; flex: 0 0 auto; }
 .sidebar-status.error .dot { background: #EF4444; }
+/* ================================================================
+   ENTERPRISE POLISH LAYER — PHASE 2 (additive, visual only)
+   Paste this entire block at the END of style.css.
+   Nothing above this line in the existing file needs to change.
+   ================================================================ */
+
+/* ---------- Item 2: extra icon-kind badge colours (form / label) ----------
+   .ext-badge.pdf and .ext-badge.xml already exist further up the file;
+   these two are new siblings for the same class, same sizing/position rules. */
+.ext-badge.form  { background: var(--tab-m1); }
+.ext-badge.label { background: var(--tab-m3); }
+
+/* ---------- Header layout: breadcrumb / title-row / actions ---------- */
+.preview-header { align-items: flex-start; gap: 10px; }
+.preview-title-row { display: flex; align-items: center; gap: 7px; }
+.preview-title-icon { display: inline-flex; flex: 0 0 auto; }
+.preview-title-icon .node-icon { width: 16px; height: 16px; }
+
+/* Item 9: typography hierarchy — heavier, slightly larger title anchors
+   the panel; breadcrumb/note stay small and muted (rules already exist). */
+#previewTitle {
+  font-size: 17.5px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.25;
+}
+
+.preview-header-actions { display: flex; align-items: center; gap: 8px; flex: 0 0 auto; }
+
+/* ---------- Item 7: enhanced download control ----------
+   Overrides the earlier .preview-header .dl rule (same selector weight,
+   later in cascade order wins) — compact, icon + label, synced radius/hover. */
+.preview-header .dl {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 11px;
+  font-size: 11.5px;
+  font-weight: 600;
+  border-radius: var(--r-sm);
+  transition: border-color 150ms ease, background 150ms ease;
+}
+.preview-header .dl svg { width: 13px; height: 13px; flex: 0 0 auto; }
+.preview-header .dl:hover { border-color: var(--blue); background: var(--blue-tint); }
+
+/* ---------- Item 11: XML inspector toggle button (sibling to .dl, same footprint) ---------- */
+.xml-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 10px;
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--ink-soft);
+  background: none;
+  border: 1px solid var(--card-border);
+  border-radius: var(--r-sm);
+  cursor: pointer;
+  transition: border-color 150ms ease, background 150ms ease, color 150ms ease;
+}
+.xml-toggle-btn svg { width: 13px; height: 13px; flex: 0 0 auto; }
+.xml-toggle-btn:hover { border-color: var(--blue); color: var(--ink); }
+.xml-toggle-btn.active { border-color: var(--blue); color: var(--blue-deep); background: var(--blue-tint); }
+
+/* ---------- Item 4: slim metadata bar, directly above the viewer ---------- */
+.meta-bar {
+  display: none; /* toggled to flex by viewer.js when a document is open */
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 18px;
+  padding: 7px 20px;
+  background: var(--card);
+  border-bottom: 1px solid var(--card-border);
+  font-family: var(--mono);
+}
+.meta-item { display: flex; align-items: baseline; gap: 6px; min-width: 0; }
+.meta-label {
+  font-size: 9.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--ink-faint);
+  flex: 0 0 auto;
+}
+.meta-value {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--ink);
+  max-width: 24ch;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.meta-value.meta-status-ok { color: var(--green); }
+
+/* ---------- Item 6: ultra-high viewport density ----------
+   Squeezes the remaining vertical gaps between header / metabar / viewer. */
+.preview-heading { gap: 3px; }
+.preview-header { padding: 8px 20px 8px; }
+.meta-bar { padding: 6px 20px; }
+.preview-body { padding: 10px 14px 12px; }
+
+/* ---------- Content row: PDF viewer + XML inspector side-by-side ---------- */
+.preview-content-row {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+.preview-content-row .preview-body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+.preview-content-row .preview-body iframe { flex: 1; }
+.preview-content-row .preview-empty { flex: 1; }
+
+/* ---------- Item 11 (WOW): collapsible XML inspector panel ---------- */
+.xml-inspector {
+  flex: 0 0 auto;
+  width: 0;
+  overflow: hidden;
+  border-left: 1px solid transparent;
+  background: var(--card);
+  display: flex;
+  flex-direction: column;
+  transition: width 220ms ease, border-color 220ms ease;
+}
+.xml-inspector.open {
+  width: 340px;
+  border-left: 1px solid var(--card-border);
+}
+.xml-inspector-head {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--ink-soft);
+  border-bottom: 1px solid var(--card-border);
+  white-space: nowrap;
+}
+.xml-inspector-head button {
+  background: none;
+  border: none;
+  color: var(--ink-faint);
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0 2px;
+}
+.xml-inspector-head button:hover { color: var(--ink); }
+.xml-inspector-body {
+  flex: 1;
+  margin: 0;
+  padding: 14px;
+  overflow: auto;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  line-height: 1.6;
+  color: var(--ink-soft);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* ---------- Item 10: viewer skeleton loading state ---------- */
+.skeleton-loader {
+  width: 100%;
+  height: 100%;
+  min-height: 200px;
+  border-radius: 14px;
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  justify-content: center;
+}
+.sk-bar {
+  height: 12px;
+  border-radius: 6px;
+  background: linear-gradient(90deg, var(--bg) 25%, var(--card-border) 37%, var(--bg) 63%);
+  background-size: 400% 100%;
+  animation: sk-shimmer 1.3s ease infinite;
+}
+.sk-bar.short { width: 40%; }
+@keyframes sk-shimmer {
+  0% { background-position: 100% 50%; }
+  100% { background-position: 0 50%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sk-bar { animation: none; background: var(--card-border); }
+}
+
+/* Narrow viewport: stack the XML inspector below the viewer instead of beside it */
+@media (max-width: 900px) {
+  .preview-content-row { flex-direction: column; }
+  .xml-inspector.open { width: auto; height: 260px; border-left: none; border-top: 1px solid var(--card-border); }
+}
