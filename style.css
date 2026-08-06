@@ -351,19 +351,80 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--amber); outline
 .tree-pane-header { padding: 6px 10px 16px; }
 .tree-pane-header h2 { font-family: var(--display); font-size: 16px; font-weight: 700; margin: 0 0 4px; }
 .tree-pane-header p { font-size: 12px; color: var(--ink-faint); margin: 0; }
-.mod-group { margin-bottom: 4px; }
-.mod-header { width: 100%; display: flex; align-items: center; gap: 10px; background: none; border: none; cursor: pointer; padding: 10px 10px; border-radius: var(--r-sm); font-family: var(--sans); font-size: 13.5px; font-weight: 700; color: var(--ink); text-align: left; }
-.mod-header:hover { background: var(--bg); }
-.mod-dot { width: 8px; height: 8px; border-radius: 50%; flex: 0 0 auto; }
-.mod-header .mname { flex: 1; }
-.mod-header .chev { font-family: var(--mono); font-size: 11px; color: var(--ink-faint); transition: transform 0.15s ease; }
-.mod-group.open .chev { transform: rotate(90deg); }
-.mod-files { padding-left: 24px; display: none; flex-direction: column; gap: 1px; }
-.mod-group.open .mod-files { display: flex; }
-.file-item { display: block; width: 100%; text-align: left; background: none; border: none; cursor: pointer; padding: 8px 10px; border-radius: var(--r-sm); font-family: var(--sans); font-size: 12.5px; color: var(--ink-soft); line-height: 1.4; }
-.file-item:hover { background: var(--bg); color: var(--ink); }
-.file-item.active { background: var(--blue-tint); color: var(--blue-deep); font-weight: 600; }
-.file-badge { display: inline-block; font-family: var(--mono); font-size: 9.5px; text-transform: uppercase; padding: 1px 6px; border-radius: 8px; margin-top: 4px; border: 1px solid var(--card-border); color: var(--ink-faint); }
+/* ---------- eCTD file-tree sidebar ---------- */
+.node-row {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 6px 8px;
+  border-radius: var(--r-sm);
+  font-family: var(--sans);
+  font-size: 12.5px;
+  color: var(--ink-soft);
+  text-align: left;
+  line-height: 1.35;
+}
+.node-row:hover { background: var(--bg); color: var(--ink); }
+.node.file > .node-row.active { background: var(--blue-tint); color: var(--blue-deep); font-weight: 600; }
+
+.node-chevron {
+  width: 10px;
+  flex: 0 0 auto;
+  font-family: var(--mono);
+  font-size: 9px;
+  color: var(--ink-faint);
+  transition: transform 0.15s ease;
+}
+.node.open > .node-row .node-chevron { transform: rotate(90deg); }
+.node.file .node-chevron { visibility: hidden; }
+
+.node-icon { width: 14px; height: 14px; flex: 0 0 auto; }
+
+.node-label { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.node.module-level > .node-row .node-label { font-weight: 700; color: var(--ink); }
+.node-label .node-sub { font-weight: 400; color: var(--ink-faint); margin-left: 5px; }
+
+.node-count {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--ink-faint);
+  background: var(--bg);
+  border-radius: 8px;
+  padding: 1px 6px;
+  flex: 0 0 auto;
+}
+
+.status-dot { width: 6px; height: 6px; border-radius: 50%; flex: 0 0 auto; margin-left: 4px; }
+.status-dot.final { background: var(--green); }
+.status-dot.placeholder { background: var(--ink-faint); }
+.status-dot.supplementary { background: var(--amber); }
+
+.node-children {
+  display: none;
+  flex-direction: column;
+  gap: 1px;
+  margin-left: 9px;
+  padding-left: 10px;
+  border-left: 1px solid var(--card-border);
+}
+.node.open > .node-children { display: flex; }
+
+.node-empty { font-size: 12px; color: var(--ink-faint); padding: 6px 10px; }
+
+.tree-legend {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 10px 0;
+  margin-top: 4px;
+  border-top: 1px solid var(--card-border);
+}
+.tree-legend span { display: flex; align-items: center; gap: 4px; font-size: 10.5px; color: var(--ink-faint); }
+.tree-legend .status-dot { margin-left: 0; }
 .preview-pane { display: flex; flex-direction: column; background: var(--bg); overflow: hidden; }
 .preview-header { padding: 16px 24px; background: var(--card); border-bottom: 1px solid var(--card-border); display: flex; align-items: center; gap: 14px; }
 .preview-header .pmod-dot { width: 10px; height: 10px; border-radius: 50%; flex: 0 0 auto; }
