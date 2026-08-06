@@ -1,12 +1,23 @@
 const MODULES = [
-  { tag: 'm1-administrative-information-and-prescribing-information', num: '1', name: 'Module 1 — Administrative & Prescribing' },
-  { tag: 'm2-common-technical-document-summaries', num: '2', name: 'Module 2 — CTD Summaries' },
-  { tag: 'm3-quality', num: '3', name: 'Module 3 — Quality (CMC)' },
-  { tag: 'm4-nonclinical-study-reports', num: '4', name: 'Module 4 — Nonclinical' },
-  { tag: 'm5-clinical-study-reports', num: '5', name: 'Module 5 — Clinical / BE' },
+  { tag: 'm1-administrative-information-and-prescribing-information', num: '1', short: 'm1', full: 'Administrative & Prescribing' },
+  { tag: 'm2-common-technical-document-summaries', num: '2', short: 'm2', full: 'CTD Summaries' },
+  { tag: 'm3-quality', num: '3', short: 'm3', full: 'Quality (CMC)' },
+  { tag: 'm4-nonclinical-study-reports', num: '4', short: 'm4', full: 'Nonclinical' },
+  { tag: 'm5-clinical-study-reports', num: '5', short: 'm5', full: 'Clinical / BE' },
 ];
 
-function badgeClass(status) {
+// Only Module 1's backbone nests documents inside section-level elements
+// (1.0, 1.1, 1.2 ...). Modules 2-5 hold <leaf> elements directly.
+const M1_SECTIONS = [
+  { tag: 'm1-0-regional-toc', num: '1.0', label: 'Regional Table of Contents' },
+  { tag: 'm1-1-forms', num: '1.1', label: 'Forms' },
+  { tag: 'm1-2-cover-letter', num: '1.2', label: 'Cover Letter' },
+  { tag: 'm1-3-administrative-information', num: '1.3', label: 'Administrative Information' },
+  { tag: 'm1-11-labeling', num: '1.11', label: 'Labeling' },
+  { tag: 'm1-14-basis-for-anda-submission', num: '1.14', label: 'Basis for ANDA Submission' },
+];
+
+function statusClass(status) {
   if (!status) return '';
   if (status.indexOf('final') !== -1) return 'final';
   if (status.indexOf('placeholder') !== -1) return 'placeholder';
@@ -14,7 +25,79 @@ function badgeClass(status) {
   return '';
 }
 
-function openFile(href, title, note, modNum) {
+function folderIcon(colorVar) {
+  return `<svg class="node-icon" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+    <path d="M2 5.5C2 4.67 2.67 4 3.5 4H7.7L9.2 5.6H16.5C17.33 5.6 18 6.27 18 7.1V14.5C18 15.33 17.33 16 16.5 16H3.5C2.67 16 2 15.33 2 14.5V5.5Z" fill="${colorVar}"/>
+  </svg>`;
+}
+
+function fileIcon() {
+  return `<svg class="node-icon" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+    <path d="M5 2.2C5 1.8 5.3 1.5 5.7 1.5H11.4L15 5.2V17.3C15 17.7 14.7 18 14.3 18H5.7C5.3 18 5 17.7 5 17.3V2.2Z" fill="var(--stamp)"/>
+    <path d="M11.4 1.5L15 5.2H12.1C11.7 5.2 11.4 4.9 11.4 4.5V1.5Z" fill="#5F241C"/>
+  </svg>`;
+}
+
+function makeNode(classNames) {
+  const el = document.createElement('div');
+  el.className = 'node ' + classNames;
+  return el;
+}
+
+function buildFileNode(leaf, modNum) {
+  const titleEl = leaf.querySelector('title');
+  const noteEl = leaf.querySelector('note');
+  const xrefEl = leaf.querySelector('xref');
+  const title = titleEl ? titleEl.textContent : '(untitled)';
+  const note = noteEl ? noteEl.textContent : '';
+  const hrefRaw = xrefEl ? xrefEl.getAttribute('href') : null;
+  const href = hrefRaw ? ('ectd/0000/' + hrefRaw) : null;
+  const status = leaf.getAttribute('status') || '';
+  const filename = hrefRaw ? hrefRaw.split('/').pop() : title;
+
+  const node = makeNode('file');
+  const row = document.createElement('button');
+  row.className = 'node-row';
+  row.type = 'button';
+  row.title = title + (note ? ' — ' + note : '');
+  const cls = statusClass(status);
+  row.innerHTML = `<span class="node-chevron"></span>${fileIcon()}<span class="node-label">${filename}</span>` +
+    (cls ? `<span class="status-dot ${cls}"></span>` : '');
+
+  if (href) {
+    row.addEventListener('click', () => openFile(href, title, note, modNum, row));
+  } else {
+    row.disabled = true;
+  }
+  node.appendChild(row);
+  node.searchText = (title + ' ' + filename).toLowerCase();
+  return node;
+}
+
+function buildFolderNode(label, subtitle, modNum, childNodes, isModuleLevel, openByDefault) {
+  const classes = ['folder'];
+  if (isModuleLevel) classes.push('module-level');
+  if (openByDefault) classes.push('open');
+  const node = makeNode(classes.join(' '));
+
+  const row = document.createElement('button');
+  row.className = 'node-row';
+  row.type = 'button';
+  row.innerHTML = `<span class="node-chevron">\u25B8</span>${folderIcon(`var(--tab-m${modNum})`)}
+    <span class="node-label">${label}${subtitle ? `<span class="node-sub">${subtitle}</span>` : ''}</span>
+    <span class="node-count">${childNodes.length}</span>`;
+  row.addEventListener('click', () => node.classList.toggle('open'));
+  node.appendChild(row);
+
+  const children = document.createElement('div');
+  children.className = 'node-children';
+  childNodes.forEach((c) => children.appendChild(c));
+  node.appendChild(children);
+  node.searchText = (label + ' ' + (subtitle || '')).toLowerCase();
+  return node;
+}
+
+function openFile(href, title, note, modNum, rowEl) {
   const header = document.getElementById('previewHeader');
   const body = document.getElementById('previewBody');
   const titleEl = document.getElementById('previewTitle');
@@ -37,29 +120,40 @@ function openFile(href, title, note, modNum) {
   iframe.title = title;
   body.appendChild(iframe);
 
-  document.querySelectorAll('.file-item').forEach((el) => el.classList.remove('active'));
-  const activeEl = document.querySelector(`.file-item[data-href="${href}"]`);
-  if (activeEl) activeEl.classList.add('active');
+  document.querySelectorAll('.node-row.active').forEach((el) => el.classList.remove('active'));
+  if (rowEl) rowEl.classList.add('active');
 }
 
 function wireFilter() {
   const input = document.getElementById('treeFilter');
+  const treeList = document.getElementById('treeList');
   if (!input) return;
+
+  function apply(el, q) {
+    if (!el.classList || !el.classList.contains('node')) return true;
+    if (el.classList.contains('file')) {
+      const match = !q || (el.searchText || '').indexOf(q) !== -1;
+      el.style.display = match ? '' : 'none';
+      return match;
+    }
+    const childrenWrap = el.querySelector(':scope > .node-children');
+    let childMatch = false;
+    if (childrenWrap) {
+      Array.from(childrenWrap.children).forEach((child) => {
+        if (apply(child, q)) childMatch = true;
+      });
+    }
+    const selfMatch = q ? (el.searchText || '').indexOf(q) !== -1 : true;
+    const visible = !q || childMatch || selfMatch;
+    el.style.display = visible ? '' : 'none';
+    if (q && visible) el.classList.add('open');
+    return visible;
+  }
+
   input.addEventListener('input', () => {
     const q = input.value.trim().toLowerCase();
-    document.querySelectorAll('.mod-group').forEach((group) => {
-      let anyVisible = false;
-      group.querySelectorAll('.file-item').forEach((item) => {
-        const match = !q || item.textContent.toLowerCase().indexOf(q) !== -1;
-        item.style.display = match ? '' : 'none';
-        if (match) anyVisible = true;
-      });
-      if (q) {
-        group.classList.toggle('open', anyVisible);
-        group.style.display = anyVisible ? '' : 'none';
-      } else {
-        group.style.display = '';
-      }
+    Array.from(treeList.children).forEach((topNode) => {
+      if (topNode.classList.contains('node')) apply(topNode, q);
     });
   });
 }
@@ -74,66 +168,44 @@ async function loadTree() {
     if (xml.querySelector('parsererror')) throw new Error('XML parse error in index.xml');
 
     treeList.innerHTML = '';
-    let firstFileHref = null;
 
     for (const mod of MODULES) {
       const modEl = xml.querySelector(mod.tag);
-      const leaves = modEl ? Array.from(modEl.querySelectorAll('leaf')) : [];
+      let childNodes = [];
 
-      const group = document.createElement('div');
-      group.className = 'mod-group open';
-      group.style.borderLeft = `3px solid var(--tab-m${mod.num})`;
-
-      const header = document.createElement('button');
-      header.className = 'mod-header';
-      header.type = 'button';
-      header.innerHTML = `<span class="mod-dot" style="background:var(--tab-m${mod.num})"></span>
-        <span class="mname">${mod.name}</span>
-        <span class="mcount">${leaves.length}</span>
-        <span class="chev">▸</span>`;
-      header.addEventListener('click', () => group.classList.toggle('open'));
-      group.appendChild(header);
-
-      const fileList = document.createElement('div');
-      fileList.className = 'mod-files';
-
-      if (leaves.length === 0) {
-        const p = document.createElement('p');
-        p.style.cssText = 'font-size:12px;color:var(--ink-faint);padding:6px 10px;';
-        p.textContent = 'No documents in this module.';
-        fileList.appendChild(p);
-      } else {
-        for (const leaf of leaves) {
-          const titleEl = leaf.querySelector('title');
-          const noteEl = leaf.querySelector('note');
-          const xrefEl = leaf.querySelector('xref');
-          const title = titleEl ? titleEl.textContent : '(untitled)';
-          const note = noteEl ? noteEl.textContent : '';
-          const hrefRaw = xrefEl ? xrefEl.getAttribute('href') : null;
-          const href = hrefRaw ? ('ectd/0000/' + hrefRaw) : null;
-          const status = leaf.getAttribute('status') || (modEl && modEl.getAttribute('status')) || '';
-
-          const btn = document.createElement('button');
-          btn.className = 'file-item';
-          btn.type = 'button';
-          btn.style.borderLeft = `2px solid var(--tab-m${mod.num})`;
-          if (href) btn.setAttribute('data-href', href);
-
-          const cls = badgeClass(status);
-          btn.innerHTML = title + (cls ? `<span class="file-badge">${cls}</span>` : '');
-
-          if (href) {
-            btn.addEventListener('click', () => openFile(href, title, note, mod.num));
-            if (!firstFileHref) { firstFileHref = href; }
-          } else {
-            btn.disabled = true;
-          }
-          fileList.appendChild(btn);
+      if (mod.num === '1' && modEl) {
+        for (const sec of M1_SECTIONS) {
+          const secEl = modEl.querySelector(sec.tag);
+          const leaves = secEl ? Array.from(secEl.querySelectorAll('leaf')) : [];
+          const fileNodes = leaves.map((leaf) => buildFileNode(leaf, mod.num));
+          childNodes.push(buildFolderNode(sec.num, sec.label, mod.num, fileNodes, false, true));
+        }
+      } else if (modEl) {
+        const leaves = Array.from(modEl.querySelectorAll('leaf'));
+        if (leaves.length) {
+          childNodes = leaves.map((leaf) => buildFileNode(leaf, mod.num));
+        } else {
+          const p = document.createElement('div');
+          p.className = 'node-empty';
+          p.textContent = 'No documents in this module.';
+          childNodes = [p];
         }
       }
-      group.appendChild(fileList);
-      treeList.appendChild(group);
+
+      const totalDocs = modEl ? modEl.querySelectorAll('leaf').length : 0;
+      const modNode = buildFolderNode(mod.short, mod.full, mod.num, childNodes, true, mod.num === '1');
+      const countEl = modNode.querySelector(':scope > .node-row .node-count');
+      if (countEl) countEl.textContent = totalDocs;
+      treeList.appendChild(modNode);
     }
+
+    const legend = document.createElement('div');
+    legend.className = 'tree-legend';
+    legend.innerHTML = `
+      <span><span class="status-dot final"></span>Final</span>
+      <span><span class="status-dot placeholder"></span>Placeholder</span>
+      <span><span class="status-dot supplementary"></span>Supplementary</span>`;
+    treeList.appendChild(legend);
 
     wireFilter();
   } catch (err) {
