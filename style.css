@@ -835,3 +835,158 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--amber); outline
   .preview-content-row { flex-direction: column; }
   .xml-inspector.open { width: auto; height: 260px; border-left: none; border-top: 1px solid var(--card-border); }
 }
+
+/* ================================================================
+   ENTERPRISE POLISH LAYER — PHASE 3 (additive, visual only)
+   Paste this AFTER the phase-2 style-additions.css block, at the
+   end of style.css. Overrides win by cascade order, nothing above
+   this line needs to change.
+   ================================================================ */
+
+/* ---------- Sidebar brand match ----------
+   Replaces the phase-2 tree-pane dark palette (generic blue/slate) with
+   the actual brand tokens already defined in :root for the portfolio
+   sidebar (--sidebar-bg, --gold, etc.) so the viewer reads as the same
+   product as index.html instead of a bolted-on tool. */
+.tree-pane {
+  --card: var(--sidebar-bg-alt);
+  --bg: var(--sidebar-bg);
+  --card-border: var(--sidebar-border);
+  --ink: var(--sidebar-text);
+  --ink-soft: #A9B1C7;
+  --ink-faint: var(--sidebar-text-soft);
+  --blue-tint: rgba(201, 164, 92, 0.16); /* gold tint for the active file row */
+  --blue-deep: var(--gold);
+  --stamp: #E08A78;
+  --tab-m1: #6C8EE0;
+  --tab-m2: #6FBF8B;
+  --tab-m3: var(--gold);
+  --tab-m4: #B79CF0;
+  --tab-m5: #E08A78;
+}
+/* Branch-highlight tint (phase-2 rule used a hardcoded blue) now gold-matched */
+.tree-pane .node.folder:has(.node-row.active) > .node-row {
+  background: rgba(201, 164, 92, 0.16);
+}
+.tree-pane { scrollbar-color: var(--gold) transparent; }
+.tree-pane::-webkit-scrollbar-thumb { background: var(--gold); }
+.tree-pane::-webkit-scrollbar-thumb:hover { background: #DDB876; }
+.node-label mark { background: rgba(201, 164, 92, 0.35); color: inherit; border-radius: 2px; padding: 0 1px; }
+
+/* ---------- Search result count ---------- */
+.search-result-count {
+  display: none;
+  margin: 6px 10px 0;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  color: var(--gold);
+}
+
+/* ---------- Validation Status widget ---------- */
+.validation-widget {
+  flex: 0 0 auto;
+  padding: 10px 14px;
+  border-top: 1px solid var(--card-border);
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.validation-widget .v-title {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--ink-faint);
+  margin: 0 0 2px;
+}
+.v-check { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--ink-soft); }
+.v-check .v-dot { width: 6px; height: 6px; border-radius: 50%; flex: 0 0 auto; }
+.v-check.ok { color: var(--ink); }
+.v-check.ok .v-dot { background: #22C55E; }
+.v-check.fail .v-dot { background: #EF4444; }
+
+/* ---------- Dashboard / empty state ---------- */
+.dashboard { padding: 6px 4px; display: flex; flex-direction: column; gap: 18px; height: 100%; overflow: auto; }
+.dashboard-head h3 { margin: 0 0 4px; font-family: var(--display); font-size: 19px; font-weight: 700; color: var(--ink); }
+.dashboard-head p { margin: 0; font-size: 12.5px; color: var(--ink-soft); }
+.dashboard-stats { display: flex; gap: 10px; flex-wrap: wrap; }
+.dstat { background: var(--card); border: 1px solid var(--card-border); border-radius: var(--r-sm); padding: 10px 18px; text-align: center; min-width: 90px; }
+.dstat .dnum { font-family: var(--display); font-size: 22px; font-weight: 700; color: var(--ink); }
+.dstat .dlabel { font-size: 10px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--ink-faint); }
+.dashboard-modules { display: flex; flex-direction: column; gap: 4px; }
+.dmod-row { display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; background: var(--card); border: 1px solid var(--card-border); border-radius: var(--r-sm); font-size: 12.5px; color: var(--ink-soft); }
+.dmod-row .dmod-name { font-weight: 600; color: var(--ink); }
+.dmod-row .dmod-check { color: #22C55E; font-weight: 700; margin-left: 6px; }
+.dmod-row .dmod-check.empty { color: var(--ink-faint); }
+.dashboard-hint { font-size: 11.5px; color: var(--ink-faint); font-style: italic; margin: 0; }
+
+/* ---------- Tabbed details panel (replaces the phase-2 single-purpose inspector) ---------- */
+.panel-tabs { display: flex; border-bottom: 1px solid var(--card-border); flex: 0 0 auto; }
+.panel-tab {
+  flex: 1;
+  padding: 8px 10px;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  text-align: center;
+  color: var(--ink-faint);
+  background: none;
+  border: none;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: color 150ms ease, border-color 150ms ease;
+}
+.panel-tab:hover { color: var(--ink); }
+.panel-tab.active { color: var(--ink); border-bottom-color: var(--gold); }
+.panel-tab-content { display: none; flex: 1; overflow: auto; flex-direction: column; }
+.panel-tab-content.active { display: flex; }
+
+.copy-xml-btn {
+  align-self: flex-end;
+  margin: 8px 14px 0;
+  font-family: var(--mono);
+  font-size: 10px;
+  padding: 4px 9px;
+  border: 1px solid var(--card-border);
+  border-radius: 6px;
+  background: none;
+  color: var(--ink-soft);
+  cursor: pointer;
+  transition: border-color 150ms ease, color 150ms ease;
+}
+.copy-xml-btn:hover { border-color: var(--gold); color: var(--ink); }
+
+.props-table { width: 100%; border-collapse: collapse; font-size: 11.5px; }
+.props-table tr { border-bottom: 1px solid var(--card-border); }
+.props-table tr:last-child { border-bottom: none; }
+.props-table td { padding: 9px 14px; vertical-align: top; }
+.props-table td.pk { color: var(--ink-faint); font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.03em; width: 38%; }
+.props-table td.pv { color: var(--ink); font-weight: 600; word-break: break-all; }
+
+/* ---------- Uniform scrollbars across all scrollable panels ---------- */
+.preview-body, .panel-tab-content, .dashboard {
+  scrollbar-width: thin;
+  scrollbar-color: var(--gold) transparent;
+}
+.preview-body::-webkit-scrollbar, .panel-tab-content::-webkit-scrollbar, .dashboard::-webkit-scrollbar { width: 8px; }
+.preview-body::-webkit-scrollbar-thumb, .panel-tab-content::-webkit-scrollbar-thumb, .dashboard::-webkit-scrollbar-thumb { background: var(--card-border); border-radius: 8px; }
+.preview-body::-webkit-scrollbar-thumb:hover, .panel-tab-content::-webkit-scrollbar-thumb:hover, .dashboard::-webkit-scrollbar-thumb:hover { background: var(--gold); }
+
+/* ---------- Micro-interactions ---------- */
+.dl, .xml-toggle-btn, .panel-tab, .copy-xml-btn { transition: border-color 150ms ease, background 150ms ease, color 150ms ease, transform 100ms ease; }
+.dl:active, .xml-toggle-btn:active, .copy-xml-btn:active { transform: scale(0.96); }
+
+/* ---------- Disclaimer footer ---------- */
+.viewer-disclaimer {
+  padding: 8px 24px;
+  text-align: center;
+  font-size: 10.5px;
+  line-height: 1.5;
+  color: var(--ink-faint);
+  background: var(--card);
+  border-top: 1px solid var(--card-border);
+}
+/* Account for the disclaimer bar's height so the split-pane still fits the viewport */
+.viewer-shell { height: calc(100vh - 57px - 38px); }
+@media (max-width: 800px) { .viewer-shell { height: auto; } }
