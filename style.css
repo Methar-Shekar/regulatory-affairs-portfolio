@@ -403,7 +403,7 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--amber); outline
   background: var(--bg);
   color: var(--ink);
 }
-.tree-filter:focus { outline: 2px solid var(--blue-deep); outline-offset: -1px; }
+.tree-filter:focus { outline: 2px solid var(--blue-deep); outline-offset: -1px; }.preview-heading { display: flex; flex-direction: column; gap: 2px; flex: 1; }
 
 .mod-header .mcount {
   font-family: var(--mono);
