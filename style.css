@@ -65,6 +65,7 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--amber); outline
   top: 0; left: 0;
   width: 280px;
   height: 100vh;
+  z-index: 100; /* was unset — #home is position:relative and painted over the open drawer on mobile without this */
   background: var(--sidebar-bg);
   display: flex;
   flex-direction: column;
