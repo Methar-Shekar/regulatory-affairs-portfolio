@@ -23,6 +23,9 @@
   --stamp: #8A3B30;
   --green: #3D6B4F;
   --gold: #C9A45C;
+  --steel: #6E9BD1;       /* dark-sidebar accent, replaces gold per feedback */
+  --steel-deep: #9CC2ED;  /* lighter steel for active/emphasis text on navy */
+  --steel-tint: rgba(110, 155, 209, 0.16);
 
   --tab-m1: #2C3B6B;
   --tab-m2: #3D6B4F;
@@ -516,21 +519,15 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--amber); outline
 .node-icon { width: 15px; height: 15px; flex: 0 0 auto; }
 .node-icon svg { width: 100%; height: 100%; display: block; }
 .node-icon.file-icon { position: relative; display: inline-flex; }
-.ext-badge {
-  position: absolute;
-  right: -3px;
-  bottom: -3px;
-  font-family: var(--mono);
-  font-size: 5.5px;
-  font-weight: 700;
-  line-height: 1;
-  padding: 1px 2px;
-  border-radius: 2px;
-  color: #fff;
-  letter-spacing: 0.02em;
-}
-.ext-badge.pdf { background: var(--stamp); }
-.ext-badge.xml { background: #64748B; }
+.node-icon.file-icon svg { overflow: visible; }
+/* Icon colour comes from the icon itself (stroke=currentColor), not a
+   text badge — badges read as a smudge at 14px, a distinct icon shape
+   plus one colour cue reads instantly instead. */
+.node-icon.pdf-icon { color: var(--ink-soft); }
+.node-icon.pdf-icon .pdf-fold { fill: #B54B4B; stroke: none; }
+.node-icon.xml-icon { color: var(--blue-deep); }
+.node-icon.form-icon { color: #6B72A8; }
+.node-icon.label-icon { color: #4F9C93; }
 .node.root-xml > .node-row { font-style: italic; color: var(--ink-faint); margin-bottom: 4px; }
 
 /* ---------- 2. Tree connector lines ---------- */
@@ -636,12 +633,6 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--amber); outline
    Nothing above this line in the existing file needs to change.
    ================================================================ */
 
-/* ---------- Item 2: extra icon-kind badge colours (form / label) ----------
-   .ext-badge.pdf and .ext-badge.xml already exist further up the file;
-   these two are new siblings for the same class, same sizing/position rules. */
-.ext-badge.form  { background: var(--tab-m1); }
-.ext-badge.label { background: var(--tab-m3); }
-
 /* ---------- Header layout: breadcrumb / title-row / actions ---------- */
 .preview-header { align-items: flex-start; gap: 10px; }
 .preview-title-row { display: flex; align-items: center; gap: 7px; }
@@ -693,7 +684,7 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--amber); outline
 }
 .xml-toggle-btn svg { width: 13px; height: 13px; flex: 0 0 auto; }
 .xml-toggle-btn:hover { border-color: var(--blue); color: var(--ink); }
-.xml-toggle-btn.active { border-color: var(--blue); color: var(--blue-deep); background: var(--blue-tint); }
+.xml-toggle-btn.active { border-color: var(--blue-deep); color: var(--blue-deep); background: var(--blue-tint); }
 
 /* ---------- Item 4: slim metadata bar, directly above the viewer ---------- */
 .meta-bar {
@@ -856,23 +847,23 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--amber); outline
   --ink: var(--sidebar-text);
   --ink-soft: #A9B1C7;
   --ink-faint: var(--sidebar-text-soft);
-  --blue-tint: rgba(201, 164, 92, 0.16); /* gold tint for the active file row */
-  --blue-deep: var(--gold);
+  --blue-tint: var(--steel-tint);
+  --blue-deep: var(--steel);
   --stamp: #E08A78;
   --tab-m1: #6C8EE0;
   --tab-m2: #6FBF8B;
-  --tab-m3: var(--gold);
+  --tab-m3: #5AA88F; /* was gold — module color-coding no longer overlaps the accent */
   --tab-m4: #B79CF0;
   --tab-m5: #E08A78;
 }
 /* Branch-highlight tint (phase-2 rule used a hardcoded blue) now gold-matched */
 .tree-pane .node.folder:has(.node-row.active) > .node-row {
-  background: rgba(201, 164, 92, 0.16);
+  background: var(--steel-tint);
 }
-.tree-pane { scrollbar-color: var(--gold) transparent; }
-.tree-pane::-webkit-scrollbar-thumb { background: var(--gold); }
-.tree-pane::-webkit-scrollbar-thumb:hover { background: #DDB876; }
-.node-label mark { background: rgba(201, 164, 92, 0.35); color: inherit; border-radius: 2px; padding: 0 1px; }
+.tree-pane { scrollbar-color: #6B7280 transparent; }
+.tree-pane::-webkit-scrollbar-thumb { background: #6B7280; }
+.tree-pane::-webkit-scrollbar-thumb:hover { background: #8B93A7; }
+.node-label mark { background: rgba(110, 155, 209, 0.35); color: inherit; border-radius: 2px; padding: 0 1px; }
 
 /* ---------- Search result count ---------- */
 .search-result-count {
@@ -880,7 +871,7 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--amber); outline
   margin: 6px 10px 0;
   font-family: var(--mono);
   font-size: 10.5px;
-  color: var(--gold);
+  color: var(--steel-deep);
 }
 
 /* ---------- Validation Status widget ---------- */
@@ -939,7 +930,7 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--amber); outline
   transition: color 150ms ease, border-color 150ms ease;
 }
 .panel-tab:hover { color: var(--ink); }
-.panel-tab.active { color: var(--ink); border-bottom-color: var(--gold); }
+.panel-tab.active { color: var(--ink); border-bottom-color: var(--blue-deep); }
 .panel-tab-content { display: none; flex: 1; overflow: auto; flex-direction: column; }
 .panel-tab-content.active { display: flex; }
 
@@ -956,7 +947,7 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--amber); outline
   cursor: pointer;
   transition: border-color 150ms ease, color 150ms ease;
 }
-.copy-xml-btn:hover { border-color: var(--gold); color: var(--ink); }
+.copy-xml-btn:hover { border-color: var(--blue-deep); color: var(--ink); }
 
 .props-table { width: 100%; border-collapse: collapse; font-size: 11.5px; }
 .props-table tr { border-bottom: 1px solid var(--card-border); }
@@ -968,11 +959,11 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--amber); outline
 /* ---------- Uniform scrollbars across all scrollable panels ---------- */
 .preview-body, .panel-tab-content, .dashboard {
   scrollbar-width: thin;
-  scrollbar-color: var(--gold) transparent;
+  scrollbar-color: #9AA1B4 transparent;
 }
 .preview-body::-webkit-scrollbar, .panel-tab-content::-webkit-scrollbar, .dashboard::-webkit-scrollbar { width: 8px; }
 .preview-body::-webkit-scrollbar-thumb, .panel-tab-content::-webkit-scrollbar-thumb, .dashboard::-webkit-scrollbar-thumb { background: var(--card-border); border-radius: 8px; }
-.preview-body::-webkit-scrollbar-thumb:hover, .panel-tab-content::-webkit-scrollbar-thumb:hover, .dashboard::-webkit-scrollbar-thumb:hover { background: var(--gold); }
+.preview-body::-webkit-scrollbar-thumb:hover, .panel-tab-content::-webkit-scrollbar-thumb:hover, .dashboard::-webkit-scrollbar-thumb:hover { background: #9AA1B4; }
 
 /* ---------- Micro-interactions ---------- */
 .dl, .xml-toggle-btn, .panel-tab, .copy-xml-btn { transition: border-color 150ms ease, background 150ms ease, color 150ms ease, transform 100ms ease; }
@@ -991,3 +982,40 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--amber); outline
 /* Account for the disclaimer bar's height so the split-pane still fits the viewport */
 .viewer-shell { height: calc(100vh - 57px - 38px); }
 @media (max-width: 800px) { .viewer-shell { height: auto; } }
+
+/* ================================================================
+   ENTERPRISE POLISH LAYER — PHASE 4 (visual refresh)
+   Accent swapped from gold to steel-blue; icons redesigned as real
+   shapes instead of text badges; PDF now reads as a document sitting
+   on a canvas instead of bleeding into the page background; consistent
+   elevation added; details panel narrowed slightly.
+   ================================================================ */
+
+/* ---------- Unify the light-side background: one off-white, not two whites ---------- */
+.preview-pane { background: var(--bg); }
+.preview-header, .meta-bar { background: var(--card); }
+
+/* ---------- PDF as a "paper" object on a tinted canvas, not flush with the app bg ---------- */
+.preview-body {
+  background: #E7E9EE;
+  padding: 16px;
+}
+.preview-body iframe {
+  border-radius: var(--r-md);
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--card-border);
+  background: #fff;
+}
+.preview-empty, .dashboard { background: var(--card); border-radius: var(--r-md); box-shadow: var(--shadow-sm); }
+
+/* ---------- Elevation: soft shadows + radius on the major panels (were flat/hard-edged) ---------- */
+.tree-pane { box-shadow: 2px 0 12px rgba(10, 14, 28, 0.18); }
+.preview-header { box-shadow: var(--shadow-sm); }
+.dstat, .dmod-row { box-shadow: var(--shadow-sm); }
+.xml-inspector { box-shadow: -2px 0 12px rgba(15, 20, 38, 0.06); }
+
+/* ---------- Narrower details panel — was crowding the PDF at laptop widths ---------- */
+.xml-inspector.open { width: 300px; }
+
+/* ---------- Gold -> steel accent stragglers on the light side ---------- */
+.status-pill.final { border-color: var(--blue-tint); color: var(--blue-deep); }
