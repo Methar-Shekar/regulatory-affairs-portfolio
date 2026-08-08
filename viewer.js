@@ -53,27 +53,27 @@ function folderIcon(colorVar) {
 }
 
 function fileIcon(kind) {
-  const map = {
-    xml:   { badge: 'XML', cls: 'xml' },
-    form:  { badge: 'FRM', cls: 'form' },
-    label: { badge: 'LBL', cls: 'label' },
-    pdf:   { badge: 'PDF', cls: 'pdf' },
-  };
-  const m = map[kind] || map.pdf;
-  let inner;
-  if (kind === 'form') {
-    inner = `<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/>
-      <path d="m9 13 1.5 1.5L13.5 11"/><path d="M9 17h6"/>`;
-  } else if (kind === 'label') {
-    inner = `<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/>
-      <path d="M8.5 12.5h4l2.5 2.5-2.5 2.5h-4z"/>`;
+  const k = kind || 'pdf';
+  let inner, cls;
+  if (k === 'xml') {
+    // Code-brackets — deliberately NOT a document shape, since XML/backbone
+    // is structurally different from the PDFs it describes.
+    cls = 'xml-icon';
+    inner = `<polyline points="8 6 3 12 8 18"/><polyline points="16 6 21 12 16 18"/>`;
+  } else if (k === 'form') {
+    cls = 'form-icon';
+    inner = `<rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 3h6v2H9z"/><path d="m8.5 12 2 2 4-4"/>`;
+  } else if (k === 'label') {
+    cls = 'label-icon';
+    inner = `<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M8.5 12.5h4l2.5 2.5-2.5 2.5h-4z"/>`;
   } else {
-    inner = `<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/>
-      <path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/>`;
+    // A real document-with-folded-corner shape, plus an actual filled red
+    // fold (the standard PDF visual cue) instead of a text badge.
+    cls = 'pdf-icon';
+    inner = `<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6Z"/><path class="pdf-fold" d="M14 2v6h6z"/><path d="M8 13h6"/><path d="M8 17h4"/>`;
   }
-  return `<span class="node-icon file-icon">
+  return `<span class="node-icon file-icon ${cls}">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${inner}</svg>
-    <span class="ext-badge ${m.cls}">${m.badge}</span>
   </span>`;
 }
 
