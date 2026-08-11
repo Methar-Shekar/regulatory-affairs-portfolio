@@ -1023,16 +1023,33 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--amber); outline
    which diluted it into just more brand chrome. Reverted. */
 #home {
   min-height: 100vh;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden;
+}
+
+#home::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
   background-image: 
     linear-gradient(90deg, #f4f1e8 0%, #f4f1e8 20%, rgba(244,241,232,0.4) 45%, rgba(244,241,232,0) 65%),
     url("assets/img/hero-bg.png");
   background-size: cover, cover;
   background-position: center, right center;
   background-repeat: no-repeat, no-repeat;
+  filter: saturate(0.85) brightness(1.02);
+}
+
+#home h1,
+#home .sub,
+#home .cta-row {
   position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+  z-index: 2;
+  max-width: 560px;
 }
 
 #home h1 {
@@ -1043,7 +1060,6 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--amber); outline
 #home .sub {
   font-size: 1.15rem;
   line-height: 1.7;
-  max-width: 560px;
 }
 
 #home .btn {
@@ -1052,7 +1068,7 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--amber); outline
 }
 
 @media (max-width: 900px) {
-  #home {
+  #home::before {
     background-image: linear-gradient(rgba(244,241,232,0.75), rgba(244,241,232,0.75)), url("assets/img/hero-bg.png");
     background-size: cover;
     background-position: center;
