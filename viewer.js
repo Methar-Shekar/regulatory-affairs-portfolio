@@ -338,6 +338,7 @@ function wireDetailsPanel() {
       document.querySelectorAll('.panel-tab-content').forEach((c) => {
         c.classList.toggle('active', c.getAttribute('data-tab-content') === target);
       });
+      if (!panel.classList.contains('open')) setDetailsPanelOpen(true);
     });
   });
 
