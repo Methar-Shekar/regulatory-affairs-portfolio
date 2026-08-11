@@ -345,11 +345,12 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--amber); outline
 .footer-sec p.fine { font-size: 12.5px; color: var(--ink-faint); max-width: 700px; }
 
 /* ================= Shared top nav (viewer page) ================= */
-.topnav { position: sticky; top: 0; z-index: 50; background: rgba(246, 245, 240, 0.9); backdrop-filter: blur(10px); border-bottom: 1px solid var(--card-border); }
+.topnav { position: sticky; top: 0; z-index: 50; background: var(--sidebar-bg); border-bottom: 1px solid var(--sidebar-border); }
 .topnav-inner { max-width: 1120px; margin: 0 auto; padding: 0 20px; display: flex; align-items: center; gap: 4px; }
-.topnav .navlink.back { font-size: 12px; font-weight: 600; color: var(--blue-deep); padding: 10px 12px 9px 0; }
-.topnav .logo { font-family: var(--display); font-weight: 700; font-size: 15px; color: var(--ink); padding: 10px 0 9px; }
-.topnav .logo .dot { color: var(--blue); }
+.topnav .navlink.back { font-size: 12px; font-weight: 600; color: var(--sidebar-text-soft); padding: 10px 12px 9px 0; transition: color 150ms ease; }
+.topnav .navlink.back:hover { color: var(--sidebar-text); }
+.topnav .logo { font-family: var(--display); font-weight: 700; font-size: 15px; color: var(--sidebar-text); padding: 10px 0 9px; }
+.topnav .logo .dot { color: #6E9BD1; }
 
 /* ================= Viewer split-pane ================= */
 .viewer-shell { display: grid; grid-template-columns: 320px 1fr; height: calc(100vh - 40px); }
