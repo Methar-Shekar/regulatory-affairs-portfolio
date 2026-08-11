@@ -6,7 +6,7 @@
 <title>eCTD Explorer &mdash; AMLOZA ANDA | M. Shekar</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=3">
+<link rel="stylesheet" href="style.css?v=5">
 </head>
 <body>
 
@@ -72,7 +72,7 @@
       <span class="meta-item"><span class="meta-label">Status</span><span class="meta-value meta-status-ok" id="metaStatus">—</span></span>
     </div>
 
-    <div class="preview-content-row" id="previewContentRow">
+    <div class="preview-content-col" id="previewContentRow">
       <div class="preview-body" id="previewBody">
         <!-- Replaced at runtime by renderDashboard() once index.xml has parsed -->
         <div class="preview-empty">
@@ -80,33 +80,36 @@
         </div>
       </div>
 
-      <!-- Merged tabbed panel: XML Source + Properties (was two separate drawers) -->
-      <aside class="xml-inspector" id="detailsPanel" aria-hidden="true">
-        <div class="xml-inspector-head">
-          <span>Document Details</span>
-          <button type="button" id="detailsPanelClose" aria-label="Close details panel">&times;</button>
-        </div>
-        <div class="panel-tabs">
-          <button type="button" class="panel-tab active" id="tabBtnXml" data-tab="xml">XML Source</button>
-          <button type="button" class="panel-tab" id="tabBtnProps" data-tab="props">Properties</button>
-        </div>
-
-        <div class="panel-tab-content active" id="tabXml" data-tab-content="xml">
-          <button type="button" class="copy-xml-btn" id="copyXmlBtn">Copy</button>
-          <pre class="xml-inspector-body"><code id="xmlInspectorCode">Select a document to inspect its backbone.xml entry.</code></pre>
+      <!-- Bottom-docked details strip: XML Source + Properties. Collapsed by
+           default, expands upward over the preview area — claims vertical
+           space only when opened, instead of permanently eating width. -->
+      <div class="details-strip" id="detailsPanel" aria-hidden="true">
+        <div class="details-strip-head">
+          <div class="panel-tabs">
+            <button type="button" class="panel-tab active" id="tabBtnXml" data-tab="xml">XML Source</button>
+            <button type="button" class="panel-tab" id="tabBtnProps" data-tab="props">Properties</button>
+          </div>
+          <button type="button" class="strip-chevron" id="detailsPanelClose" aria-label="Toggle details panel">&#9650;</button>
         </div>
 
-        <div class="panel-tab-content" id="tabProps" data-tab-content="props">
-          <table class="props-table">
-            <tr><td class="pk">Filename</td><td class="pv" id="propFilename">—</td></tr>
-            <tr><td class="pk">Module</td><td class="pv" id="propModule">—</td></tr>
-            <tr><td class="pk">Leaf ID</td><td class="pv" id="propLeafId">—</td></tr>
-            <tr><td class="pk">Operation</td><td class="pv" id="propOperation">—</td></tr>
-            <tr><td class="pk">Relative Path</td><td class="pv" id="propPath">—</td></tr>
-            <tr><td class="pk">File Size</td><td class="pv" id="propFileSize">—</td></tr>
-          </table>
+        <div class="details-strip-body">
+          <div class="panel-tab-content active" id="tabXml" data-tab-content="xml">
+            <button type="button" class="copy-xml-btn" id="copyXmlBtn">Copy</button>
+            <pre class="xml-inspector-body"><code id="xmlInspectorCode">Select a document to inspect its backbone.xml entry.</code></pre>
+          </div>
+
+          <div class="panel-tab-content" id="tabProps" data-tab-content="props">
+            <table class="props-table">
+              <tr><td class="pk">Filename</td><td class="pv" id="propFilename">—</td></tr>
+              <tr><td class="pk">Module</td><td class="pv" id="propModule">—</td></tr>
+              <tr><td class="pk">Leaf ID</td><td class="pv" id="propLeafId">—</td></tr>
+              <tr><td class="pk">Operation</td><td class="pv" id="propOperation">—</td></tr>
+              <tr><td class="pk">Relative Path</td><td class="pv" id="propPath">—</td></tr>
+              <tr><td class="pk">File Size</td><td class="pv" id="propFileSize">—</td></tr>
+            </table>
+          </div>
         </div>
-      </aside>
+      </div>
     </div>
   </main>
 </div>
@@ -116,6 +119,6 @@
   All company names, sponsor information, signatures, and regulatory data are fictional placeholders created for learning purposes.
 </footer>
 
-<script src="viewer.js?v=3"></script>
+<script src="viewer.js?v=5"></script>
 </body>
 </html>
