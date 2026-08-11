@@ -1021,3 +1021,31 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--amber); outline
    (color: var(--green)) is correct and is the one deliberate color
    moment on the page; a phase-4 pass mistakenly turned it steel-blue,
    which diluted it into just more brand chrome. Reverted. */
+#home {
+  background-image: url("assets/img/hero-bg.jpg");
+  background-size: cover;
+  background-position: right center;
+  background-repeat: no-repeat;
+  position: relative;
+}
+
+#home h1,
+#home .sub,
+#home .cta-row {
+  position: relative;
+  z-index: 2;
+  max-width: 480px;
+}
+
+@media (max-width: 900px) {
+  #home {
+    background-position: 70% center;
+  }
+  #home::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(244, 241, 232, 0.6);
+    z-index: 1;
+  }
+}
