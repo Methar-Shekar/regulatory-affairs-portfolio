@@ -201,15 +201,7 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--amber); outline
 }
 
 /* ---------- Hero ---------- */
-#home {
-  display: flex; flex-direction: column; justify-content: center;
-  min-height: 92vh; padding-top: 0; position: relative; overflow: hidden;
-}
-#home::before {
-  content: ""; position: absolute; top: -120px; right: -160px;
-  width: 460px; height: 460px; border-radius: 50%;
-  background: radial-gradient(circle, var(--blue-tint) 0%, transparent 70%); z-index: -1;
-}
+
 .hero h1 {
   font-family: var(--display); font-size: clamp(52px, 9vw, 104px); font-weight: 700;
   margin: 0 0 22px; letter-spacing: -0.02em; line-height: 1.05;
