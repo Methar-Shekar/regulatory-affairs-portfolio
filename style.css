@@ -716,6 +716,7 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--amber); outline
   white-space: nowrap;
 }
 .meta-value.meta-status-ok { color: var(--green); }
+.meta-bar .meta-value.meta-status-ok { color: #4ADE80; }
 
 /* ---------- Item 6: ultra-high viewport density ----------
    Squeezes the remaining vertical gaps between header / metabar / viewer. */
@@ -860,6 +861,30 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--amber); outline
   background: var(--steel-tint);
 }
 .tree-pane { scrollbar-color: #6B7280 transparent; }
+
+/* ---------- Header + bottom-strip bar go dark too (same "dark chrome,
+   light document" split as the sidebar/topnav) — the PDF page itself and
+   the details-strip's expanded body stay light, since those are the
+   actual content, not the chrome around it. Same scoped-token trick as
+   .tree-pane: redefine the tokens locally, every existing rule inside
+   this scope picks up the right colors automatically. ---------- */
+.preview-header, .details-strip-head, .meta-bar {
+  --card: var(--sidebar-bg-alt);
+  --card-border: var(--sidebar-border);
+  --ink: var(--sidebar-text);
+  --ink-soft: #A9B1C7;
+  --ink-faint: var(--sidebar-text-soft);
+  --blue-tint: var(--steel-tint);
+  --blue-deep: var(--steel);
+}
+.details-strip-head { background: var(--card); }
+/* xml-toggle-btn's hover used var(--blue), the root-level dark navy —
+   invisible against the new dark header background. */
+.preview-header .xml-toggle-btn:hover { border-color: var(--steel); color: var(--ink); }
+/* FINAL/placeholder/supplementary status pills still need to read as
+   colour-coded status, not just "light text" — brighten for dark bg. */
+.preview-header .status-pill.final { color: #4ADE80; border-color: #4ADE80; }
+.preview-header .status-pill.supplementary { color: #FBBF24; border-color: #FBBF24; }
 .tree-pane::-webkit-scrollbar-thumb { background: #6B7280; }
 .tree-pane::-webkit-scrollbar-thumb:hover { background: #8B93A7; }
 .node-label mark { background: rgba(110, 155, 209, 0.35); color: inherit; border-radius: 2px; padding: 0 1px; }
