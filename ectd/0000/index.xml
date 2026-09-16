@@ -4,12 +4,13 @@
   Sponsor: Blessaria Pharmaceuticals Inc. (fictional)
   Prepared by: M. Shekar, Regulatory Affairs Associate (fictional role) |
                M.Pharm Student, Pharmaceutical Regulatory Affairs, VIPER
-  eCTD Sequence: 0000 (Original Submission)
+  eCTD Sequence: 0000 (Original Submission) — REVISION 2: full leaf-level granularity
   ACADEMIC PORTFOLIO EXERCISE - NOT A REAL SUBMISSION - NOT FOR REGULATORY USE
   Simplified, illustrative backbone built to demonstrate understanding of eCTD structure.
   Not validated against the official FDA/ICH DTDs (not redistributed here).
-  All content modules (1-5) are content-final as Word documents. PDF conversion to
-  Letter-size (8.5x11"), FDA-margin format is the next packaging step (not yet done).
+  This revision replaces the prior combined-PDF-per-module backbone with full
+  leaf-level granularity (75 individual section-level PDFs), matching a real eCTD's
+  file organization far more closely than the original 19-document version.
 -->
 <ectd application-set="anda" application-number="[TO-BE-ASSIGNED]" sequence="0000">
 
@@ -22,117 +23,377 @@
   </admin>
 
   <m1-administrative-information-and-prescribing-information>
-
-    <m1-0-regional-toc status="final">
-      <leaf operation="new" id="m1-0-toc">
-        <title>1.0 Regional Administrative Information — Table of Contents</title>
-        <xref href="m1/us/1.0-regional-table-of-contents.pdf"/>
-      </leaf>
-    </m1-0-regional-toc>
-
     <m1-1-forms status="placeholder-only">
-      <leaf operation="new" id="m1-1-1-356h">
+      <leaf operation="new" id="id-1-1-1">
         <title>1.1.1 Form FDA 356h — Placeholder</title>
-        <xref href="m1/us/1.1-forms/1.1.1-fda-356h-placeholder.pdf"/>
+        <xref href="m1/us/11-forms/111-fda-356h-placeholder/fda-356h-placeholder.pdf"/>
       </leaf>
-      <leaf operation="new" id="m1-1-2-3794">
+      <leaf operation="new" id="id-1-1-2">
         <title>1.1.2 Form FDA 3794 — GDUFA Fee Cover Sheet Placeholder</title>
-        <xref href="m1/us/1.1-forms/1.1.2-fda-3794-gdufa-placeholder.pdf"/>
+        <xref href="m1/us/11-forms/112-fda-3794-gdufa-placeholder/fda-3794-gdufa-placeholder.pdf"/>
       </leaf>
-      <leaf operation="new" id="m1-1-3-debarment">
+      <leaf operation="new" id="id-1-1-3">
         <title>1.1.3 Debarment Certification</title>
-        <xref href="m1/us/1.1-forms/1.1.3-debarment-certification.pdf"/>
+        <xref href="m1/us/11-forms/113-debarment-certification/debarment-certification.pdf"/>
       </leaf>
-      <leaf operation="new" id="m1-1-4-financial">
+      <leaf operation="new" id="id-1-1-4">
         <title>1.1.4 Financial Disclosure — Placeholder</title>
-        <xref href="m1/us/1.1-forms/1.1.4-financial-disclosure-placeholder.pdf"/>
+        <xref href="m1/us/11-forms/114-financial-disclosure-placeholder/financial-disclosure-placeholder.pdf"/>
       </leaf>
-      <leaf operation="new" id="m1-1-5-environmental">
+      <leaf operation="new" id="id-1-1-5">
         <title>1.1.5 Environmental Analysis — Claim of Categorical Exclusion</title>
-        <xref href="m1/us/1.1-forms/1.1.5-environmental-categorical-exclusion.pdf"/>
+        <xref href="m1/us/11-forms/115-environmental-categorical-exclusion/environmental-categorical-exclusion.pdf"/>
       </leaf>
     </m1-1-forms>
 
     <m1-2-cover-letter status="final">
       <leaf operation="new" id="m1-2-cover-letter">
         <title>1.2 Cover Letter</title>
-        <xref href="m1/us/1.2-cover-letter/cover-letter.pdf"/>
+        <xref href="m1/us/12-coverletter/cover-letter.pdf"/>
       </leaf>
     </m1-2-cover-letter>
 
     <m1-3-administrative-information status="final">
       <leaf operation="new" id="m1-3-admin">
-  <title>1.3 Administrative Information</title>
-  <note>Contact/sponsor info, debarment, financial disclosure, patent/exclusivity, waivers, field copy certification, user fee cover sheet — all as academic placeholders.</note>
-  <xref href="m1/us/1.3-administrative-information/administrative-information.pdf"/>
+        <title>1.3 Administrative Information</title>
+        <xref href="m1/us/13-adminis-info/administrative-information.pdf"/>
       </leaf>
     </m1-3-administrative-information>
 
     <m1-11-labeling status="final">
       <leaf operation="new" id="m1-11-pi">
         <title>1.11 Full Prescribing Information (PLR format)</title>
-        <xref href="m1/us/1.11-labeling/full-prescribing-information.pdf"/>
+        <xref href="m1/us/114-labeling/full-prescribing-information.pdf"/>
       </leaf>
       <leaf operation="new" id="m1-11-carton">
         <title>1.11 Container and Carton Labeling</title>
-        <xref href="m1/us/1.11-labeling/container-carton-labeling.pdf"/>
+        <xref href="m1/us/114-labeling/container-carton-labeling.pdf"/>
       </leaf>
     </m1-11-labeling>
 
     <m1-14-basis-for-anda-submission status="supplementary-only">
       <leaf operation="new" id="m1-14-biopharm-discussion" status="supplementary">
-  <title>1.14 Biopharmaceutics Classification</title>
-  <note>Supplementary discussion only — not the submission basis. Submission basis is the Module 5 in vivo BE data.</note>
-  <xref href="m1/us/1.14-basis-for-submission/biopharmaceutics-classification-discussion.pdf"/>
+        <title>1.14 Biopharmaceutics Classification (Basis for Submission)</title>
+        <note>Supplementary discussion only — filed under 1.3 Administrative Information; the new skeleton has no dedicated 1.14 folder. Submission basis is the Module 5 in vivo BE data.</note>
+        <xref href="m1/us/13-adminis-info/biopharmaceutics-classification-discussion.pdf"/>
       </leaf>
     </m1-14-basis-for-anda-submission>
-
   </m1-administrative-information-and-prescribing-information>
 
   <m2-common-technical-document-summaries status="final">
-    <leaf operation="new" id="m2-3-qos">
-      <title>2.3 Quality Overall Summary</title>
-      <xref href="m2/quality-overall-summary.pdf"/>
-    </leaf>
-    <leaf operation="new" id="m2-4-2-7-overview">
-      <title>2.4 Nonclinical Overview / 2.7 Clinical Overview</title>
-      <xref href="m2/nonclinical-clinical-overview.pdf"/>
-    </leaf>
+      <leaf operation="new" id="id-2-2">
+        <title>2.2 Introduction</title>
+        <xref href="m2/22-intro/introduction.pdf"/>
+      </leaf>
+      <leaf operation="new" id="id-2-3">
+        <title>2.3 Quality Overall Summary</title>
+        <xref href="m2/23-qos/quality-overall-summary.pdf"/>
+      </leaf>
+      <leaf operation="new" id="id-2-4">
+        <title>2.4 Nonclinical Overview</title>
+        <xref href="m2/24-nonclin-over/nonclinical-overview.pdf"/>
+      </leaf>
+      <leaf operation="new" id="id-2-5">
+        <title>2.5 Clinical Overview</title>
+        <note>Reference content was originally labelled 2.7; re-filed here as it is narrative/overview material.</note>
+        <xref href="m2/25-clin-over/clinical-overview.pdf"/>
+      </leaf>
+      <leaf operation="new" id="id-2-6">
+        <title>2.6 Nonclinical Written and Tabulated Summary</title>
+        <note>Re-filed from Module 4.2 to correct ICH CTD numbering (2.6 is written/tabulated summary; 4.2 is raw study reports).</note>
+        <xref href="m2/26-nonclin-sum/nonclinical-written-summary.pdf"/>
+      </leaf>
+      <leaf operation="new" id="id-2-7">
+        <title>2.7 Clinical Summary</title>
+        <note>Cross-reference stub — no independent tabulated clinical summary required for this ANDA.</note>
+        <xref href="m2/27-clin-sum/clinical-summary.pdf"/>
+      </leaf>
+      <leaf operation="new" id="id-2-7-1">
+        <title>2.7.1 Summary of Biopharmaceutic Studies</title>
+        <note>Cross-reference stub — bioequivalence/dissolution data addressed in Module 5.</note>
+        <xref href="m2/27-clin-sum/271-summary-biopharm/summary-of-biopharmaceutic-studies.pdf"/>
+      </leaf>
   </m2-common-technical-document-summaries>
 
   <m3-quality status="final">
-    <leaf operation="new" id="m3-2-s">
-      <title>3.2.S Drug Substance (Amlodipine Besylate)</title>
-      <xref href="m3/32-body-of-data/3.2.s-drug-substance.pdf"/>
-    </leaf>
-    <leaf operation="new" id="m3-2-p">
-      <title>3.2.P Drug Product (AMLOZA Tablets)</title>
-      <xref href="m3/32-body-of-data/3.2.p-drug-product.pdf"/>
-    </leaf>
+    <m3-2-s-drug-substance>
+      <g-32s1-gen-info>
+        <group-title>3.2.S.1 General Information</group-title>
+      <leaf operation="new" id="id-3-2-s-1-1">
+        <title>3.2.S.1.1 Nomenclature</title>
+        <xref href="m3/32-body-data/32s-drug-sub/32s1-gen-info/32s11-nomenclature/nomenclature.pdf"/>
+      </leaf>
+      <leaf operation="new" id="id-3-2-s-1-2">
+        <title>3.2.S.1.2 Structure</title>
+        <xref href="m3/32-body-data/32s-drug-sub/32s1-gen-info/32s12-structure/structure.pdf"/>
+      </leaf>
+      <leaf operation="new" id="id-3-2-s-1-3">
+        <title>3.2.S.1.3 General Properties</title>
+        <xref href="m3/32-body-data/32s-drug-sub/32s1-gen-info/32s13-general-properties/general-properties.pdf"/>
+      </leaf>
+      </g-32s1-gen-info>
+      <g-32s2-manuf>
+        <group-title>3.2.S.2 Manufacture</group-title>
+      <leaf operation="new" id="id-3-2-s-2-1">
+        <title>3.2.S.2.1 Manufacturer(s)</title>
+        <xref href="m3/32-body-data/32s-drug-sub/32s2-manuf/32s21-manufacturer/manufacturers.pdf"/>
+      </leaf>
+      <leaf operation="new" id="id-3-2-s-2-2">
+        <title>3.2.S.2.2 Description of Manufacturing Process and Process Controls</title>
+        <xref href="m3/32-body-data/32s-drug-sub/32s2-manuf/32s22-manuf-process-controls/manufacturing-process-and-controls.pdf"/>
+      </leaf>
+      <leaf operation="new" id="id-3-2-s-2-3">
+        <title>3.2.S.2.3 Control of Materials</title>
+        <xref href="m3/32-body-data/32s-drug-sub/32s2-manuf/32s23-control-of-materials/control-of-materials.pdf"/>
+      </leaf>
+      <leaf operation="new" id="id-3-2-s-2-4">
+        <title>3.2.S.2.4 Controls of Critical Steps and Intermediates</title>
+        <xref href="m3/32-body-data/32s-drug-sub/32s2-manuf/32s24-control-critical-steps/control-of-critical-steps.pdf"/>
+      </leaf>
+      <leaf operation="new" id="id-3-2-s-2-5">
+        <title>3.2.S.2.5 Process Validation and/or Evaluation</title>
+        <xref href="m3/32-body-data/32s-drug-sub/32s2-manuf/32s25-process-validation/process-validation.pdf"/>
+      </leaf>
+      <leaf operation="new" id="id-3-2-s-2-6">
+        <title>3.2.S.2.6 Manufacturing Process Development</title>
+        <xref href="m3/32-body-data/32s-drug-sub/32s2-manuf/32s26-manuf-process-development/manufacturing-process-development.pdf"/>
+      </leaf>
+      </g-32s2-manuf>
+      <g-32s3-charac>
+        <group-title>3.2.S.3 Characterisation</group-title>
+      <leaf operation="new" id="id-3-2-s-3-1">
+        <title>3.2.S.3.1 Elucidation of Structure and Other Characteristics</title>
+        <xref href="m3/32-body-data/32s-drug-sub/32s3-charac/32s31-elucidation-of-structure/elucidation-of-structure.pdf"/>
+      </leaf>
+      <leaf operation="new" id="id-3-2-s-3-2">
+        <title>3.2.S.3.2 Impurities</title>
+        <xref href="m3/32-body-data/32s-drug-sub/32s3-charac/32s32-impurities/impurities.pdf"/>
+      </leaf>
+      </g-32s3-charac>
+      <g-32s4-contr-drug-sub>
+        <group-title>3.2.S.4 Control of Drug Substance</group-title>
+      <leaf operation="new" id="id-3-2-s-4-1">
+        <title>3.2.S.4.1 Specification</title>
+        <xref href="m3/32-body-data/32s-drug-sub/32s4-contr-drug-sub/32s41-spec/specification.pdf"/>
+      </leaf>
+      <leaf operation="new" id="id-3-2-s-4-2">
+        <title>3.2.S.4.2 Analytical Procedures</title>
+        <xref href="m3/32-body-data/32s-drug-sub/32s4-contr-drug-sub/32s42-analyt-proc/analytical-procedures.pdf"/>
+      </leaf>
+      <leaf operation="new" id="id-3-2-s-4-3">
+        <title>3.2.S.4.3 Validation of Analytical Procedures</title>
+        <xref href="m3/32-body-data/32s-drug-sub/32s4-contr-drug-sub/32s43-val-analyt-proc/validation-of-analytical-procedures.pdf"/>
+      </leaf>
+      <leaf operation="new" id="id-3-2-s-4-4">
+        <title>3.2.S.4.4 Batch Analyses</title>
+        <xref href="m3/32-body-data/32s-drug-sub/32s4-contr-drug-sub/32s44-batch-analys/batch-analyses.pdf"/>
+      </leaf>
+      <leaf operation="new" id="id-3-2-s-4-5">
+        <title>3.2.S.4.5 Justification of Specification</title>
+        <xref href="m3/32-body-data/32s-drug-sub/32s4-contr-drug-sub/32s45-justif-spec/justification-of-specification.pdf"/>
+      </leaf>
+      </g-32s4-contr-drug-sub>
+      <leaf operation="new" id="id-3-2-s-5">
+        <title>3.2.S.5 Reference Standards or Materials</title>
+        <xref href="m3/32-body-data/32s-drug-sub/32s5-ref-stand/reference-standards.pdf"/>
+      </leaf>
+      <leaf operation="new" id="id-3-2-s-6">
+        <title>3.2.S.6 Container Closure System</title>
+        <xref href="m3/32-body-data/32s-drug-sub/32s6-cont-closure-sys/container-closure-system.pdf"/>
+      </leaf>
+      <g-32s7-stab>
+        <group-title>3.2.S.7 Stability</group-title>
+      <leaf operation="new" id="id-3-2-s-7-1">
+        <title>3.2.S.7.1 Stability Summary and Conclusions</title>
+        <xref href="m3/32-body-data/32s-drug-sub/32s7-stab/32s71-stability-summary/stability-summary.pdf"/>
+      </leaf>
+      <leaf operation="new" id="id-3-2-s-7-2">
+        <title>3.2.S.7.2 Postapproval Stability Protocol and Commitment</title>
+        <xref href="m3/32-body-data/32s-drug-sub/32s7-stab/32s72-postapproval-stability/postapproval-stability-protocol.pdf"/>
+      </leaf>
+      <leaf operation="new" id="id-3-2-s-7-3">
+        <title>3.2.S.7.3 Stability Data</title>
+        <xref href="m3/32-body-data/32s-drug-sub/32s7-stab/32s73-stability-data/stability-data.pdf"/>
+      </leaf>
+      </g-32s7-stab>
+    </m3-2-s-drug-substance>
+
+    <m3-2-p-drug-product>
+      <leaf operation="new" id="id-3-2-p-1">
+        <title>3.2.P.1 Description and Composition</title>
+        <xref href="m3/32-body-data/32p-drug-prod/32p1-desc-comp/description-and-composition.pdf"/>
+      </leaf>
+      <leaf operation="new" id="id-3-2-p-2">
+        <title>3.2.P.2 Pharmaceutical Development</title>
+        <xref href="m3/32-body-data/32p-drug-prod/32p2-pharm-dev/pharmaceutical-development.pdf"/>
+      </leaf>
+      <g-32p3-manuf>
+        <group-title>3.2.P.3 Manufacture</group-title>
+      <leaf operation="new" id="id-3-2-p-3-1">
+        <title>3.2.P.3.1 Manufacturer(s)</title>
+        <xref href="m3/32-body-data/32p-drug-prod/32p3-manuf/32p31-manufacturer/manufacturers.pdf"/>
+      </leaf>
+      <leaf operation="new" id="id-3-2-p-3-2">
+        <title>3.2.P.3.2 Batch Formula</title>
+        <xref href="m3/32-body-data/32p-drug-prod/32p3-manuf/32p32-batch-formula/batch-formula.pdf"/>
+      </leaf>
+      <leaf operation="new" id="id-3-2-p-3-3">
+        <title>3.2.P.3.3 Description of Manufacturing Process and Process Controls</title>
+        <xref href="m3/32-body-data/32p-drug-prod/32p3-manuf/32p33-manuf-process-controls/manufacturing-process-and-controls.pdf"/>
+      </leaf>
+      <leaf operation="new" id="id-3-2-p-3-4">
+        <title>3.2.P.3.4 Controls of Critical Steps and Intermediates</title>
+        <xref href="m3/32-body-data/32p-drug-prod/32p3-manuf/32p34-control-critical-steps/control-of-critical-steps.pdf"/>
+      </leaf>
+      <leaf operation="new" id="id-3-2-p-3-5">
+        <title>3.2.P.3.5 Process Validation and/or Evaluation</title>
+        <xref href="m3/32-body-data/32p-drug-prod/32p3-manuf/32p35-process-validation/process-validation.pdf"/>
+      </leaf>
+      </g-32p3-manuf>
+      <g-32p4-contr-excip>
+        <group-title>3.2.P.4 Control of Excipients</group-title>
+      <leaf operation="new" id="id-3-2-p-4-1">
+        <title>3.2.P.4.1 Specification</title>
+        <xref href="m3/32-body-data/32p-drug-prod/32p4-contr-excip/32p41-spec/specification.pdf"/>
+      </leaf>
+      <leaf operation="new" id="id-3-2-p-4-2">
+        <title>3.2.P.4.2 Analytical Procedures</title>
+        <xref href="m3/32-body-data/32p-drug-prod/32p4-contr-excip/32p42-analyt-proc/analytical-procedures.pdf"/>
+      </leaf>
+      <leaf operation="new" id="id-3-2-p-4-3">
+        <title>3.2.P.4.3 Validation of Analytical Procedures</title>
+        <xref href="m3/32-body-data/32p-drug-prod/32p4-contr-excip/32p43-val-analyt-proc/validation-of-analytical-procedures.pdf"/>
+      </leaf>
+      <leaf operation="new" id="id-3-2-p-4-4">
+        <title>3.2.P.4.4 Justification of Specification</title>
+        <xref href="m3/32-body-data/32p-drug-prod/32p4-contr-excip/32p44-justif-spec/justification-of-specification.pdf"/>
+      </leaf>
+      <leaf operation="new" id="id-3-2-p-4-5">
+        <title>3.2.P.4.5 Excipients of Human or Animal Origin</title>
+        <xref href="m3/32-body-data/32p-drug-prod/32p4-contr-excip/32p45-excip-human-animal/excipients-of-human-or-animal-origin.pdf"/>
+      </leaf>
+      <leaf operation="new" id="id-3-2-p-4-6">
+        <title>3.2.P.4.6 Novel Excipients</title>
+        <xref href="m3/32-body-data/32p-drug-prod/32p4-contr-excip/32p46-novel-excip/novel-excipients.pdf"/>
+      </leaf>
+      </g-32p4-contr-excip>
+      <g-32p5-contr-drug-prod>
+        <group-title>3.2.P.5 Control of Drug Product</group-title>
+      <leaf operation="new" id="id-3-2-p-5-1">
+        <title>3.2.P.5.1 Specification</title>
+        <xref href="m3/32-body-data/32p-drug-prod/32p5-contr-drug-prod/32p51-spec/specification.pdf"/>
+      </leaf>
+      <leaf operation="new" id="id-3-2-p-5-2">
+        <title>3.2.P.5.2 Analytical Procedures</title>
+        <xref href="m3/32-body-data/32p-drug-prod/32p5-contr-drug-prod/32p52-analyt-proc/analytical-procedures.pdf"/>
+      </leaf>
+      <leaf operation="new" id="id-3-2-p-5-3">
+        <title>3.2.P.5.3 Validation of Analytical Procedures</title>
+        <xref href="m3/32-body-data/32p-drug-prod/32p5-contr-drug-prod/32p53-val-analyt-proc/validation-of-analytical-procedures.pdf"/>
+      </leaf>
+      <leaf operation="new" id="id-3-2-p-5-4">
+        <title>3.2.P.5.4 Batch Analyses</title>
+        <xref href="m3/32-body-data/32p-drug-prod/32p5-contr-drug-prod/32p54-batch-analys/batch-analyses.pdf"/>
+      </leaf>
+      <leaf operation="new" id="id-3-2-p-5-5">
+        <title>3.2.P.5.5 Characterisation of Impurities</title>
+        <xref href="m3/32-body-data/32p-drug-prod/32p5-contr-drug-prod/32p55-charac-imp/characterisation-of-impurities.pdf"/>
+      </leaf>
+      <leaf operation="new" id="id-3-2-p-5-6">
+        <title>3.2.P.5.6 Justification of Specification</title>
+        <xref href="m3/32-body-data/32p-drug-prod/32p5-contr-drug-prod/32p56-justif-spec/justification-of-specification.pdf"/>
+      </leaf>
+      </g-32p5-contr-drug-prod>
+      <leaf operation="new" id="id-3-2-p-6">
+        <title>3.2.P.6 Reference Standards or Materials</title>
+        <xref href="m3/32-body-data/32p-drug-prod/32p6-ref-stand/reference-standards.pdf"/>
+      </leaf>
+      <leaf operation="new" id="id-3-2-p-7">
+        <title>3.2.P.7 Container Closure System</title>
+        <xref href="m3/32-body-data/32p-drug-prod/32p7-cont-closure-sys/container-closure-system.pdf"/>
+      </leaf>
+      <g-32p8-stab>
+        <group-title>3.2.P.8 Stability</group-title>
+      <leaf operation="new" id="id-3-2-p-8-1">
+        <title>3.2.P.8.1 Stability Summary and Conclusion</title>
+        <xref href="m3/32-body-data/32p-drug-prod/32p8-stab/32p81-stability-summary/stability-summary.pdf"/>
+      </leaf>
+      <leaf operation="new" id="id-3-2-p-8-2">
+        <title>3.2.P.8.2 Postapproval Stability Protocol and Commitment</title>
+        <xref href="m3/32-body-data/32p-drug-prod/32p8-stab/32p82-postapproval-stability/postapproval-stability-protocol.pdf"/>
+      </leaf>
+      <leaf operation="new" id="id-3-2-p-8-3">
+        <title>3.2.P.8.3 Stability Data</title>
+        <xref href="m3/32-body-data/32p-drug-prod/32p8-stab/32p83-stability-data/stability-data.pdf"/>
+      </leaf>
+      </g-32p8-stab>
+    </m3-2-p-drug-product>
+
+    <m3-2-a-appendices>
+      <leaf operation="new" id="id-3-2-a-1">
+        <title>3.2.A.1 Facilities and Equipment</title>
+        <xref href="m3/32-body-data/32a-app/32a1-fac-equip/facilities-and-equipment.pdf"/>
+      </leaf>
+      <leaf operation="new" id="id-3-2-a-2">
+        <title>3.2.A.2 Adventitious Agents Safety Evaluation</title>
+        <xref href="m3/32-body-data/32a-app/32a2-advent-agent/adventitious-agents-safety-evaluation.pdf"/>
+      </leaf>
+      <leaf operation="new" id="id-3-2-a-3">
+        <title>3.2.A.3 Novel Excipients</title>
+        <xref href="m3/32-body-data/32a-app/32a3-novel-excip/novel-excipients.pdf"/>
+      </leaf>
+    </m3-2-a-appendices>
+
+      <leaf operation="new" id="m3-2-r-regional">
+        <title>3.2.R Regional Information</title>
+        <xref href="m3/32-body-data/32r-reg-info/regional-information.pdf"/>
+      </leaf>
+      <leaf operation="new" id="m3-3-lit-ref">
+        <title>3.3 Literature References</title>
+        <xref href="m3/33-lit-ref/literature-references.pdf"/>
+      </leaf>
   </m3-quality>
 
   <m4-nonclinical-study-reports status="final-waiver-basis">
-    <leaf operation="new" id="m4-1-toc">
-      <title>4.1 Table of Contents</title>
-      <xref href="m4/4.1-table-of-contents.pdf"/>
-    </leaf>
-    <leaf operation="new" id="m4-2-summary">
-      <title>4.2 Nonclinical Written and Tabulated Summaries</title>
-      <xref href="m4/4.2-nonclinical-written-summary.pdf"/>
-    </leaf>
-    <leaf operation="new" id="m4-3-reports">
-      <title>4.3 Nonclinical Study Reports</title>
-<note>None submitted — waiver basis per 21 CFR 314.94(a)(8).</note>
-      <xref href="m4/4.3-nonclinical-study-reports.pdf"/>
-    </leaf>
+      <leaf operation="new" id="id-4-1">
+        <title>4.1 Table of Contents</title>
+        <xref href="m4/41-toc/table-of-contents.pdf"/>
+      </leaf>
+      <leaf operation="new" id="id-4-2-1">
+        <title>4.2.1 Pharmacology Study Reports</title>
+        <note>No new pharmacology study reports submitted — waiver basis per 21 CFR 314.94(a)(8).</note>
+        <xref href="m4/42-stud-rep/421-pharmacol/no-new-study-reports.pdf"/>
+      </leaf>
+      <leaf operation="new" id="id-4-2-2">
+        <title>4.2.2 Pharmacokinetic Study Reports</title>
+        <note>No new pharmacokinetic study reports submitted — waiver basis per 21 CFR 314.94(a)(8).</note>
+        <xref href="m4/42-stud-rep/422-pk/no-new-study-reports.pdf"/>
+      </leaf>
+      <leaf operation="new" id="id-4-2-3">
+        <title>4.2.3 Toxicology Study Reports</title>
+        <note>No new toxicology study reports submitted — waiver basis per 21 CFR 314.94(a)(8).</note>
+        <xref href="m4/42-stud-rep/423-tox/no-new-study-reports.pdf"/>
+      </leaf>
+      <leaf operation="new" id="id-4-3">
+        <title>4.3 Literature References</title>
+        <xref href="m4/43-lit-ref/literature-references.pdf"/>
+      </leaf>
   </m4-nonclinical-study-reports>
 
   <m5-clinical-study-reports status="final">
-    <leaf operation="new" id="m5-3-1-be-synopsis">
-      <title>5.3.1 Bioequivalence Study Report Synopsis</title>
-<note>Includes comparative dissolution data. All PK/dissolution results are illustrative/hypothetical.</note>
-      <xref href="m5/bioequivalence-study-synopsis.pdf"/>
-    </leaf>
+      <leaf operation="new" id="id-5-2">
+        <title>5.2 Tabular Listing of All Clinical Studies</title>
+        <xref href="m5/52-tab-list/tabular-listing-of-clinical-studies.pdf"/>
+      </leaf>
+      <leaf operation="new" id="id-5-3-1">
+        <title>5.3.1 Bioequivalence Study Report Synopsis</title>
+        <note>Includes comparative dissolution data. All PK/dissolution results are illustrative/hypothetical.</note>
+        <xref href="m5/53-clin-stud-rep/bioequivalence-study-synopsis.pdf"/>
+      </leaf>
+      <leaf operation="new" id="id-5-4">
+        <title>5.4 Literature References</title>
+        <xref href="m5/54-lit-ref/literature-references.pdf"/>
+      </leaf>
   </m5-clinical-study-reports>
 
 </ectd>
