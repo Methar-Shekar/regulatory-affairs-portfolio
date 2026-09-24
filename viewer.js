@@ -119,7 +119,7 @@ function buildFileNode(leaf, modNum, ancestorPath, kind) {
   row.className = 'node-row';
   row.type = 'button';
   row.title = title + (note ? ' — ' + note : '');
-  row.innerHTML = `<span class="node-chevron"></span>${fileIcon(iconKind)}<span class="node-label" data-raw="${escapeHtml(filename)}">${escapeHtml(filename)}</span>` +
+ row.innerHTML = `<span class="node-chevron"></span>${fileIcon(iconKind)}<span class="node-label" data-raw="${escapeHtml(title)}">${escapeHtml(title)}</span>` +
     `<span class="status-dot ${cls}"></span>`;
 
   if (href) {
