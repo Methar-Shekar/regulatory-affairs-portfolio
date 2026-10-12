@@ -119,7 +119,10 @@ function buildFileNode(leaf, modNum, ancestorPath, kind) {
   row.className = 'node-row';
   row.type = 'button';
   row.title = title + (note ? ' — ' + note : '');
- row.innerHTML = `<span class="node-chevron"></span>${fileIcon(iconKind)}<span class="node-label" data-raw="${escapeHtml(title)}">${escapeHtml(title)}</span>` +
+  // Tree label uses `title` (not `filename`) so numbered section titles show
+  // in the sidebar — filenames were deliberately de-numbered for the
+  // downloadable dossier, so the tree reads from <title> instead.
+  row.innerHTML = `<span class="node-chevron"></span>${fileIcon(iconKind)}<span class="node-label" data-raw="${escapeHtml(title)}">${escapeHtml(title)}</span>` +
     `<span class="status-dot ${cls}"></span>`;
 
   if (href) {
@@ -145,7 +148,7 @@ function buildFolderNode(label, subtitle, modNum, childNodes, isModuleLevel, ope
   const row = document.createElement('button');
   row.className = 'node-row';
   row.type = 'button';
-  row.innerHTML = `<span class="node-chevron">\u25B8</span>${folderIcon(`var(--tab-m${modNum})`)}
+  row.innerHTML = `<span class="node-chevron">▸</span>${folderIcon(`var(--tab-m${modNum})`)}
     <span class="node-label">${label}${subtitle ? `<span class="node-sub">${subtitle}</span>` : ''}</span>
     <span class="node-count">${childNodes.length}</span>`;
   row.addEventListener('click', () => node.classList.toggle('open'));
@@ -157,6 +160,32 @@ function buildFolderNode(label, subtitle, modNum, childNodes, isModuleLevel, ope
   node.appendChild(children);
   node.searchText = (label + ' ' + (subtitle || '')).toLowerCase();
   return node;
+}
+
+// Generic recursive tree builder — walks any nesting depth of wrapper
+// elements, each optionally carrying a <group-title> child, and renders
+// <leaf> descendants as file nodes. Used for Module 3, whose backbone
+// nests several levels deep (3.2.S > 3.2.S.1 > leaves), unlike the other
+// modules' hand-written section lists.
+function buildGenericTree(parentEl, modNum, ancestorPath, allHrefs) {
+  const nodes = [];
+  Array.from(parentEl.children).forEach((child) => {
+    if (child.tagName === 'leaf') {
+      const href = child.querySelector('xref')?.getAttribute('href');
+      if (href) allHrefs.push('ectd/0000/' + href);
+      nodes.push(buildFileNode(child, modNum, ancestorPath, 'pdf'));
+      return;
+    }
+    if (child.tagName === 'group-title') return; // consumed by the parent call, skip here
+
+    const groupTitleEl = Array.from(child.children).find((c) => c.tagName === 'group-title');
+    const label = groupTitleEl ? groupTitleEl.textContent : child.tagName;
+    const pathId = (ancestorPath.length ? ancestorPath[ancestorPath.length - 1].id : 'm' + modNum) + '__' + child.tagName;
+    const childAncestorPath = ancestorPath.concat([{ id: pathId, label }]);
+    const kids = buildGenericTree(child, modNum, childAncestorPath, allHrefs);
+    nodes.push(buildFolderNode(label, '', modNum, kids, false, false, pathId));
+  });
+  return nodes;
 }
 
 // ---------- Dashboard (item 2) ----------
@@ -183,7 +212,7 @@ function renderDashboard(xml) {
     const count = modEl ? modEl.querySelectorAll('leaf').length : 0;
     return `<div class="dmod-row">
       <span class="dmod-name">${mod.short.toUpperCase()} — ${mod.full}</span>
-      <span>${count} doc${count === 1 ? '' : 's'} <span class="dmod-check ${count === 0 ? 'empty' : ''}">${count > 0 ? '\u2713' : '\u2014'}</span></span>
+      <span>${count} doc${count === 1 ? '' : 's'} <span class="dmod-check ${count === 0 ? 'empty' : ''}">${count > 0 ? '✓' : '—'}</span></span>
     </div>`;
   }).join('');
 
@@ -249,7 +278,7 @@ function openFile({ href, title, note, modNum, rowEl, ancestorPath, statusCls, i
   document.getElementById('metaLifecycle').textContent = operation.charAt(0).toUpperCase() + operation.slice(1);
   const seq = lastXmlDoc?.querySelector('ectd')?.getAttribute('sequence') || '—';
   document.getElementById('metaSequence').textContent = seq;
-  document.getElementById('metaStatus').textContent = 'XML Parsed \u2713';
+  document.getElementById('metaStatus').textContent = 'XML Parsed ✓';
 
   // ---------- Details panel: XML tab ----------
   currentLeafXmlRaw = leaf ? buildRawLeafXml(leaf) : null;
@@ -365,7 +394,7 @@ function renderBreadcrumb(ancestorPath) {
   const parts = [`<button type="button" class="crumb" data-jump="__top">Home</button>`];
   ancestorPath.forEach((p, i) => {
     const isLast = i === ancestorPath.length - 1;
-    parts.push(`<span class="crumb-sep">\u203A</span>` +
+    parts.push(`<span class="crumb-sep">›</span>` +
       (isLast
         ? `<span class="crumb current">${p.label}</span>`
         : `<button type="button" class="crumb" data-jump="${p.id}">${p.label}</button>`));
@@ -432,7 +461,7 @@ async function computeAndRenderValidation(xml, allHrefs) {
   checks.push({ label: 'Lifecycle Valid', ok: lifecycleOk });
 
   const seq = xml.querySelector('ectd')?.getAttribute('sequence') || '';
-  checks.push({ label: `Sequence Ready (${seq || '\u2014'})`, ok: !!seq });
+  checks.push({ label: `Sequence Ready (${seq || '—'})`, ok: !!seq });
 
   widget.innerHTML = `<p class="v-title">Validation Status</p>` + checks.map((c) =>
     `<span class="v-check ${c.ok ? 'ok' : 'fail'}"><span class="v-dot"></span>${c.label}</span>`
@@ -553,6 +582,12 @@ async function loadTree() {
           });
           childNodes.push(buildFolderNode(sec.num, sec.label, mod.num, fileNodes, false, true, secPathId));
         }
+      } else if (mod.num === '3' && modEl) {
+        // Module 3's backbone nests several levels deep (3.2.S > 3.2.S.1 >
+        // leaves) — the generic recursive builder walks that structure
+        // directly instead of flattening it.
+        const ancestorPath = [{ id: modPathId, label: mod.short }];
+        childNodes = buildGenericTree(modEl, mod.num, ancestorPath, allHrefs);
       } else if (modEl) {
         const leaves = Array.from(modEl.querySelectorAll('leaf'));
         const ancestorPath = [{ id: modPathId, label: mod.short }];
@@ -594,7 +629,7 @@ async function loadTree() {
     computeAndRenderValidation(xml, allHrefs);
   } catch (err) {
     treeList.innerHTML = '<p class="error-msg">Could not load index.xml: ' + err.message +
-      '.<br><br>If you\u2019re opening this file directly from disk (file://), browsers block XML ' +
+      '.<br><br>If you’re opening this file directly from disk (file://), browsers block XML ' +
       'fetches for security — serve the folder over http(s) instead (e.g. GitHub Pages, or ' +
       '<code>python3 -m http.server</code> locally).</p>';
     setSidebarStatus(false, 'XML parse failed — see error above');
